@@ -71,8 +71,12 @@ CREATE TABLE post_data(
 	dateOfPost TIMESTAMP,
 	content LONGTEXT,
 	comment_count INT,
+    page_id INT NOT NULL,
 	PRIMARY KEY(post_id),
 	FOREIGN KEY(user_id) REFERENCES user_data(user_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+	FOREIGN KEY(page_id) REFERENCES page_data(page_id)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE
 );
