@@ -74,8 +74,8 @@ CREATE TABLE post_data
 	commentCount Integer,
 	PRIMARY KEY(post_id),
 	FOREIGN KEY(user_id) REFERENCES user_data(user_id)
-	ON DELETE CASCADE
-        ON UPDATE CASCADE
+		ON DELETE CASCADE
+        	ON UPDATE CASCADE
 );
 
 CREATE TABLE comment_data(
