@@ -66,7 +66,7 @@ CREATE TABLE page_data(
 );
 
 CREATE TABLE post_data(
-	post_id INT NOT NULL UNIQUE,
+	post_id INT NOT NULL AUTO_INCREMENT,
 	user_id	 INT NOT NULL,
 	dateOfPost TIMESTAMP,
 	content LONGTEXT,
@@ -94,6 +94,20 @@ CREATE TABLE comment_data(
 	FOREIGN KEY(post_id) REFERENCES post_data(post_id)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE
+);
+
+CREATE TABLE liked_posts(
+	post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY(post_id) REFERENCES post_data(post_id),
+    FOREIGN KEY (user_id) REFERENCES user_data(user_id)
+);
+
+CREATE TABLE liked_comments(
+	comment_id INT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY(comment_id) REFERENCES comment_data(comment_id),
+    FOREIGN KEY (user_id) REFERENCES user_data(user_id)
 );
 
 CREATE TABLE messages_data(

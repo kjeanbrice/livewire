@@ -2,6 +2,8 @@ DROP TABLE sale_data;
 DROP TABLE advertisement_data;
 DROP TABLE employee_data;
 DROP TABLE messages_data;
+DROP TABLE liked_comments;
+DROP TABLE liked_posts;
 DROP TABLE comment_data;
 DROP TABLE post_data;
 DROP TABLE page_data;
