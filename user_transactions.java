@@ -32,15 +32,14 @@ public static void deletePost(Connection connection, PreparedStatement prepared_
 	prepared_statement.setInt(1,postId);
 	prepared_statement.executeUpdate();
 	
-	prepared_statement = connection.prepareStatement("UPDATE page_data SET post_count = post_count + 1 WHERE page_id=?");
-	prepared_statement.setInt(1,pageId);
+	prepared_statement = connection.prepareStatement("UPDATE page_data SET post_count = post_count + 1");
 	prepared_statement.executeUpdate();
 }
 
 public static void modifyPost(Connection connection, PreparedStatement prepared_statement,int postId, int userId, String content, int pageId) throws SQLException{
 	prepared_statement = connection.prepareStatement("UPDATE post_data SET content=? WHERE user_id=? AND post_id=? AND page_id=?");
 	prepared_statement.setString(1,content);
-	prepared_statement.setInt(2,post_id);
+	prepared_statement.setInt(2,postId);
 	prepared_statement.setInt(3,pageId);
 	prepared_statement.executeUpdate();
 }
@@ -72,10 +71,9 @@ public static void deleteCommentOnPost(Connection connection, PreparedStatement 
 }
 
 public static void modifyComment(Connection connection, PreparedStatement prepared_statement,int postId, int userId, String content, int pageId) throws SQLException{
-	prepared_statement = connection.prepareStatement("UPDATE comment_data SET comment_content=? WHERE user_id=? AND comment_id=? AND post_id=?");
+	prepared_statement = connection.prepareStatement("UPDATE comment_data SET comment_content=? WHERE user_id=? AND comment_id=?");
 	prepared_statement.setString(1,content);
-	prepared_statement.setInt(2,comment_id);
-	prepared_statement.setInt(3,postId);
+	prepared_statement.setInt(2,postId);
 	prepared_statement.executeUpdate();
 }
 
@@ -87,7 +85,7 @@ public static void likePost(Connection connection, PreparedStatement prepared_st
 }
 
 public static void unlikePost(Connection connection, PreparedStatement prepared_statement,int postId, int userId) throws SQLException{
-	prepared_statement = connection.prepareStatement("DELETE FROM liked_posts WHERE post_id=? AND user_id=?);
+	prepared_statement = connection.prepareStatement("DELETE FROM liked_posts WHERE post_id=? AND user_id=?");
 	prepared_statement.setInt(1,postId);
 	prepared_statement.setInt(2,userId);
 	prepared_statement.executeUpdate();
@@ -101,10 +99,8 @@ public static void likeComment(Connection connection, PreparedStatement prepared
 }
 
 public static void unlikeComment(Connection connection, PreparedStatement prepared_statement,int commentId, int userId) throws SQLException{
-	prepared_statement = connection.prepareStatement("DELETE FROM liked_comments WHERE comment_id=? AND user_id=?);
+	prepared_statement = connection.prepareStatement("DELETE FROM liked_comments WHERE comment_id=? AND user_id=?");
 	prepared_statement.setInt(1,commentId);
 	prepared_statement.setInt(2,userId);
 	prepared_statement.executeUpdate();
 }
-
-
