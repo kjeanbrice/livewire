@@ -59,7 +59,7 @@ public static void getTransactions(Connection connection, PreparedStatement prep
 }
 
 public static void getTransactions(Connection connection, PreparedStatement prepared_statement, String firtName, String lastName) throws SQLException{
-	prepared_statement = connection.prepareStatement("SELECT s.*, u.first_name, u.last_name FROM sale_data s, advertisement_data a, user_data u WHERE s.ad_id=a.advertisement_id AND a.consumer_id=u.user_id AND u.first_name=? AND u.last_name=?");
+	prepared_statement = connection.prepareStatement("SELECT s.*, u.first_name, u.last_name FROM sale_data s, advertisement_data a, user_data u WHERE s.ad_id=a.advertisement_id AND s.consumer_id=u.user_id AND u.first_name=? AND u.last_name=?");
 	prepared_statement.setString(1,firstName);
 	prepared_statement.setString(2,lastName);
 	prepared_statement.executeUpdate();
@@ -91,5 +91,22 @@ public static void getBestSellingRepresentative(Connection connection, PreparedS
 public static void getBestBuyingConsumer(Connection connection, PreparedStatement prepared_statement) throws SQLException{
 	prepared_statement = connection.prepareStatement("SELECT u.user_id AS userId, SUM(s.number_of_units * a.unit_price) AS totalRevenue FROM sale_data s, advertisement_data a, user_data u WHERE s.ad_id=a.advertisement_id AND u.user_id=s.consumer_id");
 	prepared_statement.setString(1,customerId);
+	prepared_statement.executeUpdate();
+}
+
+public static void getMostActiveItems(Connection connection, PreparedStatement prepared_statement) throws SQLException{
+	prepared_statement = connection.prepareStatement("SELECT item_name,COUNT(*) AS MostActiveItem FROM advertisement_data GROUP BY item_name ORDER BY MostActiveItem DESC LIMIT 1");
+	prepared_statement.executeUpdate();
+}
+
+public static void getCustomerPurchasedItem(Connection connection, PreparedStatement prepared_statement, String itemname) throws SQLException{
+	prepared_statement = connection.prepareStatement("SELECT a.item_name, u.first_name, u.last_name FROM sale_data s, advertisement_data a, user_data u WHERE s.ad_id=a.advertisement_id AND s.consumer_id=u.user_id AND a.item_name=");
+	prepared_statement.setString(1,itemname);
+	prepared_statement.executeUpdate();
+}
+
+public static void getCompanyItems(Connection connection, PreparedStatement prepared_statement, String company) throws SQLException{
+	prepared_statement = connection.prepareStatement("SELECT a.item_name, a.company FROM advertisement_data a WHERE a.company=?);
+	prepared_statement.setString(1,company);
 	prepared_statement.executeUpdate();
 }
