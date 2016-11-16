@@ -285,7 +285,7 @@
         }
     }
 
-    public static void remove_group(Connection connection, PreparedStatement prepared_statement, int group_id) throws SQLException {
+    public static void delete_group(Connection connection, PreparedStatement prepared_statement, int group_id) throws SQLException {
         prepared_statement = connection.prepareStatement("DELETE FROM "
                 + "group_data "
                 + "WHERE group_data.group_id = ?");
