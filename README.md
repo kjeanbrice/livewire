@@ -29,3 +29,7 @@
 - Special Customer Transaction Page
 - Purchasing Page
 
+
+## Timeline
+Have half your stuff in by December 2nd
+Shoot to have it done by December 5th
