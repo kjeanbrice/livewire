@@ -1,0 +1,66 @@
+/*
+    Layout.css
+    Created on : Feb 15, 2016, 10:39:47 PM
+    Authors     : Karl Jean-Brice, Wenliang Cheng, and Jennifer Zou.
+*/
+
+*{
+    /*border: 1px solid blue !important;*/
+    /*font-size: 16px;*/
+
+}
+
+option{
+    font-size: 14px;
+}
+body * {
+    box-sizing: border-box;
+    font-family: Open Sans,sans-serif;
+}
+
+.centerlogin{
+    width:650px;
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+}
+.loginarea{
+ padding-top: 5%;
+}
+
+.row-no-padding {
+  [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+.lbl-error{
+    font-size:13px;
+    color: #FF0000;
+}
+.user-login-head{
+    padding: 30px;
+    text-align: center;
+    justify-content: center;
+    background: #FFF;
+    align-items: center;
+    font-family: Open Sans,sans-serif;
+    font-size: 25px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    width:100%
+}
+
+.user-login-background{
+    /*background-color: #F2F4F5;*/
+    font-size: 25px;
+    font-weight: 300;
+    box-shadow: 1px 1px 2px 2px #F2F4F5;
+    
+}
+
+.body-background{
+    background-color: #F2F4F5; 
+}
