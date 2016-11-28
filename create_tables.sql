@@ -7,7 +7,7 @@ CREATE TABLE user_data(
 	state CHAR(2),
 	zip_code INT,
 	telephone BIGINT,
-	email VARCHAR(50),
+	email VARCHAR(50) NOT NULL,
 	account_number BIGINT NOT NULL,
 	creation_date TIMESTAMP,
 	credit_card BIGINT DEFAULT NULL,
@@ -16,6 +16,15 @@ CREATE TABLE user_data(
 	UNIQUE(telephone),
 	UNIQUE(email),
 	UNIQUE(account_number)
+);
+
+-- account_type: 1 for user and 2 for employee
+CREATE TABLE login(
+	user_email VARCHAR(50) NOT NULL,
+    user_password VARCHAR(20) NOT NULL,
+    account_type INTEGER NOT NULL,
+    user_id      INTEGER NOT NULL,
+    PRIMARY KEY(user_email)
 );
 
 CREATE TABLE user_preferences(
