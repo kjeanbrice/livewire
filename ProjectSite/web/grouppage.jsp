@@ -15,7 +15,9 @@
         <link rel="stylesheet" href="styles/css/bootstrap.min.css">
         <link rel="stylesheet" href="styles/gen-styles/loginformgen.css">
         <link rel="stylesheet" href="styles/gen-styles/grouppagestyle.css">
-        <script src = "scripts/html-helper.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     </head>
 </head>
 <body>
@@ -46,7 +48,7 @@
                     </div>
                     <div class="options-body">
                         <form action = "#">
-                            <button type ="button" id ="btn_delete"  class="btn btn-deletegroup">
+                            <button type ="button" id ="btn_delete" data-toggle="modal" data-target="#delete_modal" class="btn btn-deletegroup">
                                 Delete Group
                             </button>
                         </form>
@@ -54,11 +56,62 @@
                         <div>
                             <br>
                             <form action ="#">
-                                <button  class="btn btn-deletegroup" type="button" id = "btn_rename">
+                                <button  class="btn btn-deletegroup" type="button" data-toggle="modal" data-target="#rename_modal" id = "btn_rename">
                                     Rename Group
                                 </button>
                             </form>
-                            <!-- Add model here -->    
+                            <!-- Add model here --> 
+
+                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="rename_modal" class="modal fade" style="display: none;">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                          <h4 class="modal-title">Rename your group</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form role="form" class="form-horizontal">
+                                              <div class="form-group">
+                                                  <label class="col-lg-2 control-label">New name</label>
+                                                  <div class="col-lg-10">
+                                                      <input type="text" placeholder="" id="input_rename" name = "input_rename" class="form-control">
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <div class="col-lg-offset-2 col-lg-10">
+                                                      <button class="btn btn-send" type="submit">Submit Request</button>
+                                                  </div>
+                                              </div>
+                                          </form>
+                                      </div>
+                                  </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+                          
+                               <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete_modal" class="modal fade" style="display: none;">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                          <h4 class="modal-title">Delete your group</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form role="form" class="form-horizontal" style= "text-align: center;">
+                                              <div class="form-group">
+                                                  <label class="col-lg-7 col-lg-offset-2 control-label">Are you sure you want to delete this group?</label>
+           
+                                              </div>
+                                              <div class="form-group">
+                                                  <div class="col-lg-offset-2 col-lg-8">
+                                                      <button class="btn btn-send" type="submit">  Yes  </button>
+                                                      <button class="btn btn-send" type="button">  No  </button>
+                                                  </div>
+                                              </div>
+                                          </form>
+                                      </div>
+                                  </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
                         </div>
                         <ul class="options-nav options-divider">
 
@@ -72,11 +125,17 @@
                 <aside class="lg-side">
                     <div class="group-head">
                         <h3>Group Name</h3>
+                         <span name = "add_notification" class ="" style="padding-left:2%; ">Notifications go here.</span>
                         <form action="#" class="pull-right position">
                             <div class="input-append">
-                                <input type="text" class="sr-input" placeholder="Add a member">
                                 <button class="btn sr-btn" type="button">Add</button>
+                                <a href="loginpage.jsp"></a>
+                                <input type="text" class="sr-input" placeholder="Add a member">
+                                
                             </div>
+                            
+                            
+                            
                         </form>
                     </div>
                     <div class="options-body body-background">
@@ -93,7 +152,7 @@
                         <table class="table table-options table-hover">
                             <tbody>
                             <div class="post-area">
-                             
+
                             </div>
 
                             </tbody>

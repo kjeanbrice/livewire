@@ -44,7 +44,8 @@ CREATE TABLE group_data(
 	PRIMARY KEY(group_id),
 	FOREIGN KEY(user_id) REFERENCES user_data(user_id)
 	ON DELETE CASCADE
-	ON UPDATE CASCADE
+	ON UPDATE CASCADE,
+    UNIQUE(group_name)
 );
 
 CREATE TABLE group_members(
