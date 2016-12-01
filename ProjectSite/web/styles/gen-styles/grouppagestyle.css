@@ -1,0 +1,323 @@
+/*
+Group page style sheet.
+*/
+
+
+.post-area{
+    height:800px;
+}
+
+.group-box {
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+.group-box aside {
+    display: table-cell;
+    float: none;
+    height: 100%;
+    padding: 0;
+    vertical-align: top;
+}
+.group-box .sm-side {
+    background: none repeat scroll 0 0 #e5e8ef;
+    border-radius: 4px 0 0 4px;
+    width: 25%;
+}
+.group-box .lg-side {
+    background: none repeat scroll 0 0 #fff;
+    border-radius: 0 4px 4px 0;
+    width: 75%;
+}
+.group-box .sm-side .user-head {
+    background: none repeat scroll 0 0 #00a8b3;
+    border-radius: 4px 0 0;
+    color: #fff;
+    min-height: 80px;
+    padding: 10px;
+}
+.user-head .group-avatar {
+    float: left;
+    width: 65px;
+}
+.user-head .group-avatar img {
+    border-radius: 4px;
+}
+.user-head .user-name {
+    display: inline-block;
+    margin: 0 0 0 10px;
+}
+.user-head .user-name h5 {
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 0;
+    margin-top: 15px;
+}
+.user-head .user-name h5 a {
+    color: #fff;
+}
+.user-head .user-name span a {
+    color: #87e2e7;
+    font-size: 12px;
+}
+
+
+.options-body {
+    padding: 20px;
+}
+.btn-deletegroup {
+    background: none repeat scroll 0 0 #ff6c60;
+    color: #fff;
+    padding: 12px 0;
+    text-align: center;
+    width: 100%;
+}
+.btn-deletegroup:hover {
+    background: none repeat scroll 0 0 #f5675c;
+    color: #fff;
+}
+ul.options-nav {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.options-divider {
+    border-bottom: 1px solid #d5d8df;
+}
+ul.options-nav li {
+    display: inline-block;
+    line-height: 45px;
+    width: 100%;
+}
+ul.options-nav li a {
+    color: #6a6a6a;
+    display: inline-block;
+    line-height: 45px;
+    padding: 0 20px;
+    width: 100%;
+}
+ul.options-nav li a:hover, ul.group-nav li.active a, ul.group-nav li a:focus {
+    background: none repeat scroll 0 0 #d5d7de;
+    color: #6a6a6a;
+}
+ul.group-nav li a i {
+    color: #6a6a6a;
+    font-size: 16px;
+    padding-right: 10px;
+}
+ul.group-nav li a span.label {
+    margin-top: 13px;
+}
+ul.labels-info li h4 {
+    color: #5c5c5e;
+    font-size: 13px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    text-transform: uppercase;
+}
+ul.labels-info li {
+    margin: 0;
+}
+ul.labels-info li a {
+    border-radius: 0;
+    color: #6a6a6a;
+}
+ul.labels-info li a:hover, ul.labels-info li a:focus {
+    background: none repeat scroll 0 0 #d5d7de;
+    color: #6a6a6a;
+}
+ul.labels-info li a i {
+    padding-right: 10px;
+}
+.nav.nav-pills.nav-stacked.labels-info p {
+    color: #9d9f9e;
+    font-size: 11px;
+    margin-bottom: 0;
+    padding: 0 22px;
+}
+.group-head {
+    background: none repeat scroll 0 0 #41cac0;
+    border-radius: 0 4px 0 0;
+    color: #fff;
+    min-height: 80px;
+    padding: 20px;
+}
+.group-head h3 {
+    display: inline-block;
+    font-weight: 300;
+    margin: 0;
+    padding-top: 6px;
+    
+}
+.group-head .sr-input {
+    border: medium none;
+    border-radius: 4px 0 0 4px;
+    box-shadow: none;
+    color: #8a8a8a;
+    float: left;
+    height: 40px;
+    padding: 0 10px;
+}
+.group-head .sr-btn {
+    background: none repeat scroll 0 0 #00a6b2;
+    border: medium none;
+    border-radius: 0 4px 4px 0;
+    color: #fff;
+    height: 40px;
+    padding: 0 20px;
+}
+.table-options {
+    border: 1px solid #d3d3d3;
+    margin-bottom: 0;
+}
+.table-options tr td {
+    padding: 12px !important;
+}
+.table-options tr td:hover {
+    cursor: pointer;
+}
+.table-options tr td .fa-star.group-started, .group-area tr td .fa-star:hover {
+    color: #f78a09;
+}
+.table-options tr td .fa-star {
+    color: #d5d5d5;
+}
+.table-options tr.unread td {
+    background: none repeat scroll 0 0 #f7f7f7;
+    font-weight: 600;
+}
+ul.group-pagination {
+    float: right;
+}
+ul.group-pagination li {
+    float: left;
+}
+.group-option {
+    display: inline-block;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.group-option .chk-all, .group-option .btn-group {
+    margin-right: 5px;
+}
+.group-option .chk-all, .group-option .btn-group a.btn {
+    background: none repeat scroll 0 0 #fcfcfc;
+    border: 1px solid #e7e7e7;
+    border-radius: 3px !important;
+    color: #afafaf;
+    display: inline-block;
+    padding: 5px 10px;
+}
+.group-pagination a.np-btn {
+    background: none repeat scroll 0 0 #fcfcfc;
+    border: 1px solid #e7e7e7;
+    border-radius: 3px !important;
+    color: #afafaf;
+    display: inline-block;
+    padding: 5px 15px;
+}
+.group-option .chk-all input[type="checkbox"] {
+    margin-top: 0;
+}
+.group-option .btn-group a.all {
+    border: medium none;
+    padding: 0;
+}
+.group-pagination a.np-btn {
+    margin-left: 5px;
+}
+.group-pagination li span {
+    display: inline-block;
+    margin-right: 5px;
+    margin-top: 7px;
+}
+.fileinput-button {
+    background: none repeat scroll 0 0 #eeeeee;
+    border: 1px solid #e6e6e6;
+}
+.options-body .modal .modal-body input, .options-body .modal .modal-body textarea {
+    border: 1px solid #e6e6e6;
+    box-shadow: none;
+}
+
+.modal-header h4.modal-title {
+    font-family: "Open Sans",sans-serif;
+    font-weight: 300;
+}
+.modal-body label {
+    font-family: "Open Sans",sans-serif;
+    font-weight: 400;
+}
+.heading-group h4 {
+    border-bottom: 1px solid #ddd;
+    color: #444;
+    font-size: 18px;
+    margin-top: 20px;
+    padding-bottom: 10px;
+}
+
+
+
+.fileinput-button {
+    float: left;
+    margin-right: 4px;
+    overflow: hidden;
+    position: relative;
+}
+.fileinput-button input {
+    cursor: pointer;
+    direction: ltr;
+    font-size: 23px;
+    margin: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(-300px, 0px) scale(4);
+}
+.fileupload-buttonbar .btn, .fileupload-buttonbar .toggle {
+    margin-bottom: 5px;
+}
+.files .progress {
+    width: 200px;
+}
+.fileupload-processing .fileupload-loading {
+    display: block;
+}
+* html .fileinput-button {
+    line-height: 24px;
+    margin: 1px -3px 0 0;
+}
+* + html .fileinput-button {
+    margin: 1px 0 0;
+    padding: 2px 15px;
+}
+@media (max-width: 767px) {
+.files .btn span {
+    display: none;
+}
+.files .preview * {
+    width: 40px;
+}
+.files .name * {
+    display: inline-block;
+    width: 80px;
+    word-wrap: break-word;
+}
+.files .progress {
+    width: 20px;
+}
+.files .delete {
+    width: 60px;
+}
+}
+ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+ 
