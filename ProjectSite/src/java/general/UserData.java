@@ -249,4 +249,9 @@ public class UserData implements Serializable {
         this.password = password;
     }
     
+    public String generateJSON(){
+        String outputString = "{\"firstName\":\"" +this.getFirstname() +"\", \"lastName\":\"" + this.getLastname() + "\"}";
+        return outputString;
+    }
+    
 }

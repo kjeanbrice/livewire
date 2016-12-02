@@ -5,12 +5,16 @@
  */
 package Servlets;
 
+import general.CommentData;
+import general.GroupData;
+import general.PostData;
 import general.UserData;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -42,7 +46,7 @@ public class ProcessLogin extends HttpServlet {
        
         String useremail = (String)request.getParameter("email");
         String userpassword = (String)request.getParameter("password");
-        
+            
         System.out.println("Process Login Email: " + useremail);
         System.out.println("Process Login Password: " + userpassword);
         
@@ -62,7 +66,7 @@ public class ProcessLogin extends HttpServlet {
                     String user = "root";
                     
                     /*The password of your database*/
-                    String password = "root_pwd";
+                    String password = "kJb_123456";
                     
                     String server_address = "jdbc:mysql://localhost:3306/cse305_part3";
                     
