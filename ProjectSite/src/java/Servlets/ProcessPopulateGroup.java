@@ -5,13 +5,20 @@
  */
 package Servlets;
 
+import general.GroupData;
+import general.UserData;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import utility.DatabaseUtils;
+import utility.GenUtils;
 
 /**
  *
@@ -31,10 +38,63 @@ public class ProcessPopulateGroup extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String group_id = (String)request.getParameter("group_id");
-        
-        
-        
+        response.setContentType("application/json");
+        String group_id = (String)request.getParameter("groupId");
+        UserData user_data = GenUtils.getUserData(request.getSession());
+
+        PrintWriter out = response.getWriter();
+        boolean errorFlag = false;
+        String errorString = null;
+
+        if (group_id == null || user_data == null || group_id.length() == 0) {
+            out.println("");
+        } else {
+            Connection connection = GenUtils.getConnection(request);
+            group_id = group_id.trim();
+            if (connection == null) {
+                try {
+                    /*The username of your database*/
+                    String user = "root";
+
+                    /*The password of your database*/
+                    String password = "kJb_123456";
+
+                    String server_address = "jdbc:mysql://localhost:3306/cse305_part2";
+
+                    System.out.println("Connecting to driver...");
+                    Class.forName("com.mysql.jdbc.Driver");
+                    System.out.println("Connection Successful");
+
+                    connection = DriverManager.getConnection(server_address, user, password);
+                    GenUtils.setConnection(request, connection);
+                    connection = GenUtils.getConnection(request);
+
+                } catch (ClassNotFoundException ex) {
+                    errorFlag = true;
+                    errorString = ex.getMessage();
+                } catch (SQLException ex) {
+                    errorFlag = true;
+                    errorString = ex.getMessage();
+                }
+            } else {
+                connection = GenUtils.getConnection(request);
+            }
+
+            try {
+                System.out.println("Testing SQL connection");
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id), user_data.getUserid());
+                if (group_data == null) {
+                    out.println("");
+                } else {
+                    String json_output = group_data.generateJSON();
+                    out.println(json_output);
+                }
+                GenUtils.closeConnection(request);
+            } catch (SQLException ex) {
+                errorFlag = true;
+                errorString = ex.getMessage();
+            }
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

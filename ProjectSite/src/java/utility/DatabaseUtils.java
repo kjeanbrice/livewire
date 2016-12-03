@@ -75,11 +75,15 @@ public class DatabaseUtils {
             if (rs2.next()) {
                 String firstName = rs2.getString("first_name");
                 String lastName = rs2.getString("last_name");
+                String email = rs2.getString("email");
+                
                 groupdata.setGroupID(groupID);
                 groupdata.setOwnerFirstname(firstName);
                 groupdata.setOwnerLastname(lastName);
                 groupdata.setCreationDate(creation_date);
                 groupdata.setGroupName(group_name);
+                groupdata.setEmailAddress(email);
+                
                 if (user_id == signedInUser) {
                     groupdata.setGroupOwner(true);
                 }
@@ -127,8 +131,9 @@ public class DatabaseUtils {
                         rs5 = pstm5.executeQuery();
 
                         //Get comments
+                        ArrayList<CommentData> commentdata = new ArrayList<CommentData>();
                         while (rs5.next()) {
-                            ArrayList<CommentData> commentdata = new ArrayList<CommentData>();
+                            
                             int comment_id = rs5.getInt("comment_id");
                             CommentData new_comment = new CommentData();
                             String creation_date2 = rs5.getString("creation_date");

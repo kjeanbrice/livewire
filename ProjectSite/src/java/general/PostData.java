@@ -117,8 +117,12 @@ public class PostData implements Serializable {
                 outputString += commentData.get(i).generateJSON() + ",";
             }
         }
-
+        
+        if(commentData.isEmpty()){
+            outputString+="{}]}";
+        }else{
         outputString += "}";
+        }
         return outputString;
 
     }

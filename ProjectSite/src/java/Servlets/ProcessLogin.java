@@ -85,7 +85,10 @@ public class ProcessLogin extends HttpServlet {
                     errorFlag = true;
                     errorString = ex.getMessage();
                 }
-            } 
+            }
+            else{
+                connection = GenUtils.getConnection(request);
+            }
             
             try{
                 System.out.println("Testing SQL connection");
@@ -119,9 +122,10 @@ public class ProcessLogin extends HttpServlet {
         else{
             HttpSession session = request.getSession();
             GenUtils.storeUserData(session, userdata);
+            request.setAttribute("GROUP_ID","11");
             
             /*Credentials validated - go to the user page: WORK IN PROGRESS*/
-            RequestDispatcher d= this.getServletContext().getRequestDispatcher("/loginpage.jsp");
+            RequestDispatcher d= this.getServletContext().getRequestDispatcher("/grouppage.jsp");
             d.forward(request,response);
         }
         

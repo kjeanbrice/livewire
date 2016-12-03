@@ -17,6 +17,7 @@ public class GroupData implements Serializable {
     private int groupID;
     private String ownerFirstname;
     private String ownerLastname;
+    private String emailAddress;
     private String groupName;
     private String creationDate;
     private ArrayList<PostData> postData;
@@ -26,13 +27,15 @@ public class GroupData implements Serializable {
         postData = new ArrayList<PostData>();
     }
 
-    public GroupData(int groupID, String ownerFirstName, String ownerLastname, String groupName, String creationDate, ArrayList<PostData> postData) {
+    public GroupData(int groupID, String ownerFirstName, String ownerLastname, String groupName, String creationDate, String emailAddress, ArrayList<PostData> postData) {
         this.groupID = groupID;
         this.ownerFirstname = ownerFirstName;
         this.ownerLastname = ownerLastname;
         this.groupName = groupName;
+
         this.creationDate = creationDate;
         this.postData = postData;
+        this.emailAddress = emailAddress;
         groupOwner = false;
 
     }
@@ -127,16 +130,23 @@ public class GroupData implements Serializable {
                 + "\"lastName\":\"" + ownerLastname + "\","
                 + "\"creationDate\":\"" + creationDate + "\","
                 + "\"groupName\":\"" + groupName + "\","
+                + "\"email\":\"" + emailAddress + "\","
                 + "\"Posts\":[";
+        String test_post = "";
         for (int i = 0; i < postData.size(); i++) {
             if (i == postData.size() - 1) {
+                test_post = postData.get(i).generateJSON() + "]";
                 outputString += postData.get(i).generateJSON() + "]";
             } else {
+                test_post = postData.get(i).generateJSON();
                 outputString += postData.get(i).generateJSON() + ",";
             }
         }
-
-        outputString += "}";
+        if (postData.isEmpty()) {
+            outputString += "{}]}";
+        } else {
+            outputString += "}";
+        }
         return outputString;
 
     }
@@ -153,5 +163,19 @@ public class GroupData implements Serializable {
      */
     public void setGroupOwner(boolean groupOwner) {
         this.groupOwner = groupOwner;
+    }
+
+    /**
+     * @return the emailAddress
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    /**
+     * @param emailAddress the emailAddress to set
+     */
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 }

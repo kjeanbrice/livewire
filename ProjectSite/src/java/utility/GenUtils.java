@@ -38,11 +38,11 @@ public class GenUtils {
     
     
     public static void storeUserData(HttpSession session,UserData user_data){
-        session.setAttribute("SignedInUser",user_data);
+        session.setAttribute("SIGNED_IN_USER",user_data);
     }
     
     public static UserData getUserData(HttpSession session){
-        UserData user_data = (UserData)session.getAttribute("SignedInUser");
+        UserData user_data = (UserData)session.getAttribute("SIGNED_IN_USER");
         return user_data;
     }
     
