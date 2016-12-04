@@ -4,6 +4,7 @@
     Author     : Karl
 --%>
 
+<%@page import="general.UserData"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -32,8 +33,7 @@
                     <span id = "team_name">
                         THE DIRTY BITS
                     </span>
-                    <span id ="group_id" style ="display: none">
-                        <%
+                     <%
 
                             if (session.getAttribute("SIGNED_IN_USER") == null) {
                                 String errorString = "You must log in first!";
@@ -50,11 +50,16 @@
                             }
                             
                             Integer group_number = Integer.parseInt((String)request.getAttribute("GROUP_ID"));
+                            UserData user = (UserData)(session.getAttribute("SIGNED_IN_USER"));
                             //RequestDispatcher d = this.getServletContext().getRequestDispatcher("/ProcessPopulateGroup");
                             //d.forward(request, response);
 
                         %>
+                    <span id ="group_id" style ="display: none">
                         <%=group_number%>
+                    </span>
+                    <span id ="guser_id" style ="display: none">
+                        <%=user.getUserid()%>
                     </span>
                 </div>
             </div>
@@ -67,8 +72,8 @@
                             <img  width="64" hieght="60" src="images/temp_logo_w.png">
                         </a>
                         <div class="user-name" >
-                            <h5><span id="user_name_area" >Created by: </span></h5>
-                            <span id = "user_email"><a href="#">email@server.com</a></span>
+                            <h5><span id="user_name_area" > </span></h5>
+                            <span id = "user_email"><a href="#"></a></span>
                         </div>
 
                     </div>
@@ -81,16 +86,22 @@
                         
                          <form action ="#">
                              <br>
-                            <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#groupmembers_modal" id = "btn_rename">
+                            <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#groupmembers_modal" id = "btn_viewgroup">
                                 View Group Members
                             </button>
                         </form>
 
                         <form action ="#">
                             <br>
-                            <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#rename_modal" id = "btn_rename">
+                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#rename_modal" id = "btn_rename">
                                 Rename Group
-                            </button>
+                            </a>
+                        </form>
+                         <form action ="#">
+                            <br>
+                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_leave">
+                                Leave Group
+                            </a>
                         </form>
                     </div>
 
@@ -116,7 +127,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-lg-offset-2 col-lg-10">
-                                                    <button class="btn btn-send" type="submit">Submit Request</button>
+                                                    <button class="btn btn-send" id="rename_submit" type="submit">Submit Request</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -161,8 +172,8 @@
                 </aside>
                 <aside class="lg-side">
                     <div class="group-head">
-                        <span id = "group_name"><h3>Group Name</h3></span>
-                        <span name = "add_notification" class ="" style="padding-left:2%; ">Notifications go here.</span>
+                        <span id = "group_name"><h3></h3></span>
+                        <span name = "add_notification" class ="" style="padding-left:2%; "></span>
                         <form action="#" class="pull-right position">
                             <div class="input-append">
                                 <button class="btn sr-btn" type="button">Add</button>
@@ -197,6 +208,7 @@
                                                     </div>  
                                                 <div class="row_ele">
                                                     <input class="btn btn-primary" id="btnpost" type="button" name="submit" value="Post"/>
+                                                    <span  class = "lbl-error" id="err_post"></span>
                                                 </div>
                                             </form>
                                         </div>
@@ -218,7 +230,7 @@
     </div>
 
 <script src = "scripts/jquery-3.1.1.min.js"></script>
-<script src = "scripts/group_page_actions.js"></script>
+<script src = "scripts/group_page_transactions.js"></script>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
 </body>
 

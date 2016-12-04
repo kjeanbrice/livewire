@@ -15,29 +15,23 @@ import java.util.ArrayList;
 public class GroupData implements Serializable {
 
     private int groupID;
-    private String ownerFirstname;
-    private String ownerLastname;
-    private String emailAddress;
     private String groupName;
     private String creationDate;
     private ArrayList<PostData> postData;
-    private boolean groupOwner;
+    private UserData user;
 
     public GroupData() {
         postData = new ArrayList<PostData>();
     }
 
-    public GroupData(int groupID, String ownerFirstName, String ownerLastname, String groupName, String creationDate, String emailAddress, ArrayList<PostData> postData) {
+    public GroupData(int groupID,String groupName, String creationDate,UserData user, ArrayList<PostData> postData) {
         this.groupID = groupID;
-        this.ownerFirstname = ownerFirstName;
-        this.ownerLastname = ownerLastname;
+        
         this.groupName = groupName;
 
         this.creationDate = creationDate;
         this.postData = postData;
-        this.emailAddress = emailAddress;
-        groupOwner = false;
-
+        this.user = user;
     }
 
     /**
@@ -82,33 +76,6 @@ public class GroupData implements Serializable {
         this.creationDate = creationDate;
     }
 
-    /**
-     * @return the ownerFirstname
-     */
-    public String getOwnerFirstname() {
-        return ownerFirstname;
-    }
-
-    /**
-     * @param ownerFirstname the ownerFirstname to set
-     */
-    public void setOwnerFirstname(String ownerFirstname) {
-        this.ownerFirstname = ownerFirstname;
-    }
-
-    /**
-     * @return the ownerLastname
-     */
-    public String getOwnerLastname() {
-        return ownerLastname;
-    }
-
-    /**
-     * @param ownerLastname the ownerLastname to set
-     */
-    public void setOwnerLastname(String ownerLastname) {
-        this.ownerLastname = ownerLastname;
-    }
 
     /**
      * @return the postData
@@ -126,12 +93,26 @@ public class GroupData implements Serializable {
 
     public String generateJSON() {
         String outputString = "{\"groupID\":" + groupID + ","
-                + "\"firstName\":\"" + ownerFirstname + "\","
-                + "\"lastName\":\"" + ownerLastname + "\","
+                + "\"firstName\":\"" + user.getFirstname() + "\","
+                + "\"lastName\":\"" + user.getLastname() + "\","
                 + "\"creationDate\":\"" + creationDate + "\","
                 + "\"groupName\":\"" + groupName + "\","
-                + "\"email\":\"" + emailAddress + "\","
+                + "\"email\":\"" + user.getEmail() + "\","
+                + "\"gUserID\":\"" + user.getUserid() + "\","
                 + "\"Posts\":[";
+
+        if (postData.isEmpty()) {
+            outputString = "{\"groupID\":" + groupID + ","
+                    + "\"firstName\":\"" + getUser().getFirstname() + "\","
+                    + "\"lastName\":\"" + getUser().getLastname() + "\","
+                    + "\"creationDate\":\"" + creationDate + "\","
+                    + "\"groupName\":\"" + groupName + "\","
+                    + "\"email\":\"" + user.getEmail() + "\","
+                    + "\"gUserID\":\"" + user.getUserid() + "\"}";
+                    
+            return outputString;
+        }
+
         String test_post = "";
         for (int i = 0; i < postData.size(); i++) {
             if (i == postData.size() - 1) {
@@ -142,40 +123,26 @@ public class GroupData implements Serializable {
                 outputString += postData.get(i).generateJSON() + ",";
             }
         }
-        if (postData.isEmpty()) {
-            outputString += "{}]}";
-        } else {
-            outputString += "}";
-        }
+
+        outputString += "}";
+
         return outputString;
 
     }
 
     /**
-     * @return the groupOwner
+     * @return the user
      */
-    public boolean isGroupOwner() {
-        return groupOwner;
+    public UserData getUser() {
+        return user;
     }
 
     /**
-     * @param groupOwner the groupOwner to set
+     * @param user the user to set
      */
-    public void setGroupOwner(boolean groupOwner) {
-        this.groupOwner = groupOwner;
+    public void setUser(UserData user) {
+        this.user = user;
     }
 
-    /**
-     * @return the emailAddress
-     */
-    public String getEmailAddress() {
-        return emailAddress;
-    }
 
-    /**
-     * @param emailAddress the emailAddress to set
-     */
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
 }

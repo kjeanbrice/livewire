@@ -18,18 +18,20 @@ public class PostData implements Serializable {
     private UserData user;
     private String postDate;
     private String postContent;
+    private int postLikes;
     private ArrayList<CommentData> commentData;
 
     public PostData() {
         commentData = new ArrayList<CommentData>();
     }
 
-    public PostData(int postID, UserData user, String postDate, String postContent, ArrayList<CommentData> commentData) {
+    public PostData(int postID, UserData user, String postDate, String postContent,int postLikes, ArrayList<CommentData> commentData) {
         this.postID = postID;
         this.user = user;
         this.postDate = postDate;
         this.postContent = postContent;
         this.commentData = commentData;
+        this.postLikes = postLikes;
 
     }
 
@@ -107,9 +109,23 @@ public class PostData implements Serializable {
         String outputString = "{\"postID\":" + postID + ","
                 + "\"postContent\":\"" + postContent + "\","
                 + "\"postDate\":\"" + postDate + "\","
+                + "\"pUserID\":\"" + user.getUserid() + "\","
+                + "\"pLikes\":\"" + getPostLikes() + "\","
                 + "\"ownerFirstName\":\"" + user.getFirstname() + "\","
                 + "\"ownerLastName\":\"" + user.getLastname() + "\","
                 + "\"Comments\":[";
+
+        if (commentData.isEmpty()) {
+            outputString = "{\"postID\":" + postID + ","
+                    + "\"postContent\":\"" + postContent + "\","
+                    + "\"postDate\":\"" + postDate + "\","
+                    + "\"pUserID\":\"" + user.getUserid() + "\","
+                    + "\"pLikes\":\"" + getPostLikes() + "\","
+                    + "\"ownerFirstName\":\"" + user.getFirstname() + "\","
+                    + "\"ownerLastName\":\"" + user.getLastname() + "\"}";
+            return outputString;
+        }
+
         for (int i = 0; i < commentData.size(); i++) {
             if (i == commentData.size() - 1) {
                 outputString += commentData.get(i).generateJSON() + "]";
@@ -117,14 +133,25 @@ public class PostData implements Serializable {
                 outputString += commentData.get(i).generateJSON() + ",";
             }
         }
-        
-        if(commentData.isEmpty()){
-            outputString+="{}]}";
-        }else{
+
         outputString += "}";
-        }
+
         return outputString;
 
+    }
+
+    /**
+     * @return the postLikes
+     */
+    public int getPostLikes() {
+        return postLikes;
+    }
+
+    /**
+     * @param postLikes the postLikes to set
+     */
+    public void setPostLikes(int postLikes) {
+        this.postLikes = postLikes;
     }
 
 }

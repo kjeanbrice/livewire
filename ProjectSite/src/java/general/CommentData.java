@@ -18,6 +18,7 @@ public class CommentData implements Serializable {
     private UserData user;
     private String commentContent;
     private String creationDate;
+    private int commentLikes;
 
     /**
      * @return the commentID
@@ -26,12 +27,12 @@ public class CommentData implements Serializable {
 
     }
 
-    public CommentData(int commentID, UserData user, String commentContent, String creationDate) {
+    public CommentData(int commentID, UserData user, String commentContent, int commentLikes, String creationDate) {
         this.commentID = commentID;
         this.user = user;
         this.commentContent = commentContent;
         this.creationDate = creationDate;
-
+        this.commentLikes = commentLikes;
     }
 
     public int getCommentID() {
@@ -87,18 +88,39 @@ public class CommentData implements Serializable {
         this.creationDate = creationDate;
     }
 
+     /**
+     * @return the commentLikes
+     */
+    public int getCommentLikes() {
+        return commentLikes;
+    }
+
+    /**
+     * @param commentLikes the commentLikes to set
+     */
+    public void setCommentLikes(int commentLikes) {
+        this.commentLikes = commentLikes;
+    }
+    
+    
     public String generateJSON() {
 
         String outputString = "{\"commentID\":" + commentID + ","
                 + "\"commentContent\":\"" + commentContent + "\","
                 + "\"creationDate\":\"" + creationDate + "\",";
 
-        outputString += "\"firstName\":\"" + user.getFirstname() + "\","
-                + "\"lastName\":\"" + user.getLastname() + "\"";
+        outputString += "\"cFirstName\":\"" + user.getFirstname() + "\","
+                +"\"cUserID\":\"" + user.getUserid() + "\","
+                +"\"cLikes\":\"" + commentLikes + "\","
+                + "\"cLastName\":\"" + user.getLastname() + "\"";
 
         outputString += "}";
 
         return outputString;
     }
+
+   
+
+ 
 
 }

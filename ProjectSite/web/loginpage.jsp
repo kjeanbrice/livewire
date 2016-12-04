@@ -115,7 +115,7 @@ and open the template in the editor.
             </div>
         </div>
         <script src = "scripts/jquery-3.1.1.min.js"></script>
-        <script src = "scripts/form-validation.js"></script> 
+        <script src = "scripts/login_form_transition_effect.js"></script> 
     </body>
 </html>
 
