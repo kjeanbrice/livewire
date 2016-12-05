@@ -77,6 +77,12 @@ body {
     border-radius: 3px;
     resize: none;
 }
+
+.edit_text_area{
+    
+   resize: none;
+    
+};
 .btn {
     background-color: #337ab7;
     color: #fff;

@@ -4,12 +4,11 @@
     Author     : Karl
 --%>
 
+<%@page import="utility.GenUtils"%>
 <%@page import="general.UserData"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    
-    <head>
+<html>  
     <head>
         <title>Group Page</title>
         <meta charset="UTF-8">
@@ -18,11 +17,10 @@
         <link rel="stylesheet" href="styles/css/bootstrap.min.css">
         <link rel="stylesheet" href="styles/gen-styles/loginformgen.css">
         <link rel="stylesheet" href="styles/gen-styles/grouppagestyle.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src = "scripts/jquery-3.1.1.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     </head>
-</head>
 <body>
     <div class = "" >
         <div class="container">
@@ -50,7 +48,8 @@
                             }
                             
                             Integer group_number = Integer.parseInt((String)request.getAttribute("GROUP_ID"));
-                            UserData user = (UserData)(session.getAttribute("SIGNED_IN_USER"));
+                            UserData user = GenUtils.getUserData(request.getSession());
+                            System.out.println("User: " + user.getFirstname() + "UserID: " + user.getUserid());
                             //RequestDispatcher d = this.getServletContext().getRequestDispatcher("/ProcessPopulateGroup");
                             //d.forward(request, response);
 
@@ -110,6 +109,56 @@
 
                     <!-- Add model here --> 
                     <div>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="edit_comment_modal" class="modal fade" style="display: none;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                        <h4 class="modal-title">Edit your comment</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                       
+                                            <div class="form-group">
+                                                    <textarea name="edit_comment_feed" id="edit_feed" class="form-control edit_text_area"  rows="3" placeholder="New comment"></textarea>        
+                                            </div>
+                                            <div class="form-group ">
+                                                <div>
+                                                    <button class="btn btn-primary" id="btn_edit_comment" type="button">Submit Request</button>
+                                                     <span  class = "lbl-error" id="err_edit_comment"></span>
+                                                </div>
+                                            </div>
+                                       
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                        
+                         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="edit_post_modal" class="modal fade" style="display: none;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                        <h4 class="modal-title">Edit your post</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                       
+                                            <div class="form-group">
+                                                    <textarea name="edit_post_feed" id="edit_post_feed" class="form-control edit_text_area"  rows="3" placeholder="New comment"></textarea>        
+                                            </div>
+                                            <div class="form-group ">
+                                                <div>
+                                                    <button class="btn btn-primary" id="btn_edit_post" type="button">Submit Request</button>
+                                                     <span  class = "lbl-error" id="err_edit_post"></span>
+                                                </div>
+                                            </div>
+                                       
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                        
+                        
+                        
                         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="rename_modal" class="modal fade" style="display: none;">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -229,7 +278,6 @@
         </div>
     </div>
 
-<script src = "scripts/jquery-3.1.1.min.js"></script>
 <script src = "scripts/group_page_transactions.js"></script>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
 </body>

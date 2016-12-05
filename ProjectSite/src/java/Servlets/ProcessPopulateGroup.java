@@ -57,7 +57,7 @@ public class ProcessPopulateGroup extends HttpServlet {
                     String user = "root";
 
                     /*The password of your database*/
-                    String password = "toor";
+                    String password = "kJb_123456";
 
                     String server_address = "jdbc:mysql://localhost:3306/cse305_part4";
 
@@ -82,7 +82,7 @@ public class ProcessPopulateGroup extends HttpServlet {
 
             try {
                 System.out.println("Testing SQL connection");
-                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id), user_data.getUserid());
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
                 if (group_data == null) {
                     out.println("");
                 } else {

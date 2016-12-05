@@ -5,6 +5,8 @@
  */
 package Servlets;
 
+import general.GroupData;
+import general.UserData;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -42,7 +44,7 @@ public class ProcessGroupTransaction extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
 
-            Connection connection = GenUtils.setUpConnection("root", "toor", "jdbc:mysql://localhost:3306/cse305_part4");
+            Connection connection = GenUtils.setUpConnection("root", "kJb_123456", "jdbc:mysql://localhost:3306/cse305_part4");
             String transaction_type = request.getParameter("transaction");
             if (transaction_type == null || transaction_type.length() == 0) {
                 out.println("TRANSACTION TYPE IS EMPTY");
@@ -92,6 +94,7 @@ public class ProcessGroupTransaction extends HttpServlet {
 
                 String user_id = request.getParameter("userID");
                 String post_id = request.getParameter("postID");
+                
 
                 if (user_id == null || post_id == null) {
                     out.println(transaction_type + "INVALID ARGUMENTS FOR THE TRANSACTION");
@@ -113,9 +116,9 @@ public class ProcessGroupTransaction extends HttpServlet {
                 }
                 
                 if (return_val > 0) {
-                    out.println(transaction_type + ": SQL QUERY FAILED");
+                    out.println(transaction_type + ": SQL SUCESS");
                 } else {
-                    out.println(transaction_type + ": SQL SUCCESS");
+                    out.println(transaction_type + ": SQL SQL QUERY SUCCESS");
                 }
                 connection.close();
             } else if(transaction_type.equals("LIKE_COMMENT") || transaction_type.equals("DISLIKE_COMMENT") || transaction_type.equals("DELETE_COMMENT")) {
@@ -144,9 +147,74 @@ public class ProcessGroupTransaction extends HttpServlet {
                 }
                 
                 if (return_val > 0) {
-                    out.println("LIKE_COMMENT: SQL QUERY FAILED");
+                    out.println(transaction_type + ":SQL SUCCESS");
                 } else {
-                    out.println("LIKE_COMMENT: SQL SUCCESS");
+                    out.println(transaction_type + ":SQL QUERY FAILED");
+                }
+                connection.close();
+                //"/ProjectSite/ProcessGroupTransaction?transaction=EDIT_COMMENT&groupID=" + group_id + "&userID=" + user_id + "&content=" + edit_content 
+                   // + "&commentOwner=" + comment_userid + "&commentID=" + comment_id;
+            }else if(transaction_type.equals("EDIT_COMMENT")){
+                
+                String group_id = request.getParameter("groupID");
+                String user_id = request.getParameter("userID");
+                String comment_owner = request.getParameter("commentOwner");
+                String comment_id = request.getParameter("commentID");
+                String content = request.getParameter("content");
+                
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
+                int return_val = 0;
+                if(group_data.getUser().getUserid() == Integer.parseInt(user_id)){
+                    DatabaseUtils.editComment(connection, Integer.parseInt(comment_id), content);
+                }
+                else{
+                    if(Integer.parseInt(user_id) == Integer.parseInt(comment_owner)){
+                        DatabaseUtils.editComment(connection, Integer.parseInt(comment_id), content);
+                    }
+                    else{
+                        out.println(transaction_type + ":SQL QUERY FAILED - NOT OWNER");
+                        connection.close();
+                        return;
+                    }
+                }
+                
+                if (return_val > 0) {
+                    out.println(transaction_type + ":SQL SUCCESS");
+                } else {
+                    out.println(transaction_type + ":SQL QUERY FAILED");
+                }
+                connection.close();
+                
+        
+            }else if(transaction_type.equals("EDIT_POST")){
+                //"/ProjectSite/ProcessGroupTransaction?transaction=EDIT_POST&groupID=" + group_id + "&userID=" + user_id + "&content=" + edit_content 
+                  //  + "&postOwner=" + post_userid + "&postID=" + post_id;
+                  String group_id = request.getParameter("groupID");
+                String user_id = request.getParameter("userID");
+                String post_owner = request.getParameter("postOwner");
+                String post_id = request.getParameter("postID");
+                String content = request.getParameter("content");
+                
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
+                int return_val = 0;
+                if(group_data.getUser().getUserid() == Integer.parseInt(user_id)){
+                    DatabaseUtils.editPost(connection, Integer.parseInt(post_id), content);
+                }
+                else{
+                    if(Integer.parseInt(user_id) == Integer.parseInt(post_owner)){
+                        DatabaseUtils.editPost(connection, Integer.parseInt(post_id), content);
+                    }
+                    else{
+                        out.println(transaction_type + ":SQL QUERY FAILED - NOT OWNER");
+                        connection.close();
+                        return;
+                    }
+                }
+                
+                if (return_val > 0) {
+                    out.println(transaction_type + ":SQL SUCCESS");
+                } else {
+                    out.println(transaction_type + ":SQL QUERY FAILED");
                 }
                 connection.close();
             }

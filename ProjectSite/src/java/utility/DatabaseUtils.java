@@ -51,7 +51,7 @@ public class DatabaseUtils {
         return null;
     }
 
-    public static GroupData populateGroup(Connection connection, int groupID, int signedInUser) throws SQLException {
+    public static GroupData populateGroup(Connection connection, int groupID) throws SQLException {
         GroupData groupdata = new GroupData();
         ArrayList<PostData> postdata = new ArrayList<PostData>();
 
@@ -364,6 +364,36 @@ public class DatabaseUtils {
                 + "comment_data"
                 + " WHERE comment_data.comment_id = ?");
         prepared_statement.setInt(1, comment_id);
+        return_val = prepared_statement.executeUpdate();
+        return return_val;
+    }
+    
+    
+      public static int editComment(Connection connection,
+            int comment_id,String content)
+            throws SQLException {
+        int return_val = 0;
+        PreparedStatement prepared_statement;
+        prepared_statement = connection.prepareStatement("UPDATE comment_data "
+                + "SET comment_data.comment_content = ? "
+                + "WHERE comment_data.comment_id  = ? ");
+
+        prepared_statement.setString(1, content);
+        prepared_statement.setInt(2, comment_id);
+        return_val = prepared_statement.executeUpdate();
+        return return_val;
+    }
+      
+    public static int editPost(Connection connection,
+            int post_id, String content)
+            throws SQLException {
+        int return_val = 0;
+        PreparedStatement prepared_statement;
+        prepared_statement = connection.prepareStatement("UPDATE post_data "
+                + "SET post_data.content = ? "
+                + "WHERE post_data.post_id  = ?");
+        prepared_statement.setInt(2, post_id);
+        prepared_statement.setString(1, content);
         return_val = prepared_statement.executeUpdate();
         return return_val;
     }
