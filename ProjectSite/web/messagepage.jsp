@@ -91,23 +91,11 @@
                         
                          <form action ="#">
                              <br>
-                            <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#groupmembers_modal" id = "btn_viewgroup">
+                            <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#groupmembers_modal" id = "btn_go_home">
                                 My Page
                             </button>
                         </form>
 
-<!--                        <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#rename_modal" id = "btn_rename">
-                                Rename Group
-                            </a>
-                        </form>-->
-                         <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_leave">
-                                Log Out
-                            </a>
-                        </form>
 
   <form action ="#">
                             <br>
