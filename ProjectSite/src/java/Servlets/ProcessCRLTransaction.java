@@ -6,6 +6,7 @@
 package Servlets;
 
 import general.AdvertisementData;
+import general.UserData;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -164,6 +165,25 @@ System.out.println(transaction_type);
                         sqldate , 
                        Integer.parseInt(request.getParameter("number_of_units")) , 
                        Integer.parseInt(request.getParameter("account_number")));
+            } else if(transaction_type.equals("GET_USERS")) {
+
+                ArrayList<UserData> users = DatabaseUtils.getAllUsers(connection);
+                   String returnString = "{\"users\":[ ";
+                for(int i = 0; i < users.size();i++) {
+                   returnString += ((UserData)(users.get(i))).generateJSON();
+                   returnString += ",";
+                }
+                returnString = returnString.substring(0,returnString.length()-1);
+                returnString+="]}";
+                System.out.println(returnString);
+                response.setContentType("application/json");
+                out.print(returnString);
+                out.flush();
+                
+            } else if(transaction_type.equals("DELETE_USER")) {
+               int user_id = Integer.parseInt(request.getParameter("user_id"));
+               DatabaseUtils.deleteUser(connection, user_id);
+                
             }
            
             

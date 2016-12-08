@@ -59,9 +59,10 @@ public class DatabaseUtils {
         ResultSet rs1 = null;
         ArrayList<UserData> all_users = new ArrayList<UserData>();
         PreparedStatement pstm1 = connection.prepareStatement(
-                "SELECT U.first_name, U.last_name,U.user_id, U.email"
-                + "FROM user_data U");
+                "SELECT first_name,last_name,user_id, email, address FROM user_data");
         rs1 = pstm1.executeQuery();
+                System.out.println("selection2");
+
         while (rs1.next()) {
 
             String last_name = rs1.getString("last_name");
@@ -69,7 +70,6 @@ public class DatabaseUtils {
             String address = rs1.getString("address");
             String user_email = rs1.getString("email");
             int user_id = rs1.getInt("user_id");
-
             UserData user = new UserData();
             user.setFirstname(first_name);
             user.setLastname(last_name);
@@ -562,6 +562,12 @@ public class DatabaseUtils {
         prepared_statement.setInt(1,messageId);
         prepared_statement.executeUpdate();
         }
+        
+        public static void deleteUser(Connection connection, int user_id) throws SQLException {
+            PreparedStatement prepared_statement = connection.prepareStatement("DELETE FROM user_data WHERE user_id=?");
+        prepared_statement.setInt(1,user_id);
+        prepared_statement.executeUpdate();
+        }
     
     public static ArrayList<MessageData> get_messages(Connection connection, int user_id ) throws SQLException{
         ResultSet rs1 = null;
@@ -585,7 +591,7 @@ public class DatabaseUtils {
         else return messages;
     }   
     
-        public static ArrayList<String> get_Posts(Connection connection, int user_id ) throws SQLException{
+     public static ArrayList<String> get_Posts(Connection connection, int user_id ) throws SQLException{
         ResultSet rs1 = null;
         PreparedStatement prepared_statement;
         ArrayList<String> posts = new ArrayList<String>();
@@ -600,6 +606,8 @@ public class DatabaseUtils {
         if(posts.size() == 0) return null;
         else return posts;
     }   
+        
+
         
    public static ArrayList<AdvertisementData> getAds(Connection connection ) throws SQLException{
         ResultSet rs1 = null;
