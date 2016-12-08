@@ -10,9 +10,21 @@ $("#btn_CRL_Panel").click(function() {var link = "http://" + window.location.hos
         window.location = link;});
 $("#bestsellers").click(function() {$("#best_seller_space").fadeIn("slow"); getBestSellers();});
 
+$("#btn_CRL_Panel").click(function() {var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "CRLpage.jsp"
+        window.location = link;});
+
+
+$("#user_groups_space a").click(function() {
+var groupIdForLink = this.id.split("group")[1];
+console.log(groupIdForLink);
+var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "grouppage.jsp?groupID=" + groupIdForLink;
+ window.location = link;
+});
+
 var useremail = $("#guser_email").text().trim();
 $("#history").click(function() {$("#history_space").fadeIn("slow"); getCustomerHistory(useremail);});
 $("#suggest").click(function() {$("#suggest_space").fadeIn("slow"); getCustomerSuggestions(useremail);});
+$("#user_groups").click(function() {$("#user_groups_space").fadeIn("slow"); getCustomerGroups(useremail);});
 
 
 });
@@ -96,7 +108,7 @@ $("#suggest").click(function() {$("#suggest_space").fadeIn("slow"); getCustomerS
     
        function getCustomerGroups(email) {
   var senderId = parseInt($("#guser_id").text());
-    var $url = "/ProjectSite/ProcessCRLTransaction?transaction=CUSTOMER_GROUPS"
+    var $url = "/ProjectSite/ProcessCRLTransaction?transaction=CUSTOMER_GROUPSWITH_ID"
     +"&email=" + email;
 
     $.ajax({
@@ -107,16 +119,28 @@ $("#suggest").click(function() {$("#suggest_space").fadeIn("slow"); getCustomerS
          
         },
         error: function (e) {
-             $("#user_group_space").empty()
+             $("#user_groups_space").empty()
             var groups = $.parseJSON( e.responseText);
             console.log(groups);
             for(m in groups.groups) {
-              $("#user_group_space").append("<h5>" + groups.groups[m] +"<\/h5>")
+              $("#user_groups_space").append("<a id=\"group" + groups.groups[m].split('~')[1] +"\">" + groups.groups[m].split('~')[0] +"<\/a>")
 
         }
         $("#user_group_space").fadeIn("slow");
+        
+$("#user_groups_space a").click(function() {
+var groupIdForLink = this.id.split("group")[1];
+console.log(groupIdForLink);
+var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "grouppage.jsp?groupID=" + groupIdForLink;
+ window.location = link;
+});
 
         }
+        
+        
+        
+        
+        
 
     });
     }

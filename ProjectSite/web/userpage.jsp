@@ -246,6 +246,22 @@
                                             </form>
                                         </div
                                     </div>                                    </div>
+                            
+                              <h3 id="user_groups" style="cursor:pointer">Get Users Groups</h3>
+                                        <div class="feed_form" id="user_groups_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+                                                      <div class="form-group">
+                                                <input type="text" name="type" id="user_email" tabindex="1" class="form-control" placeholder="User Email" >
+                                                      </div>
+                                                <div class="row_ele">
+                                                    <input class="btn btn-primary" id="btn_getgroups" type="button" name="get_groups" value="Get Groups"/>
+                                                    <span  class = "lbl-error" id="err_post"></span>
+                                                </div>
+                                                        <div id="suggestions"></div>
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
                                         <div class="clear"></div>
                                         <div class="feed_div" id="feed_div">
                                         <div id ="post_area_template">
