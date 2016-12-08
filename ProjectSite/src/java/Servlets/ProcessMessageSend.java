@@ -5,18 +5,11 @@
  */
 package Servlets;
 
-import general.CommentData;
-import general.GroupData;
-import general.PostData;
 import general.UserData;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,32 +22,36 @@ import utility.GenUtils;
 
 /**
  *
- * @author Karl
+ * @author peterjasko
  */
-@WebServlet(name = "ProcessLogin", urlPatterns = {"/ProcessLogin"})
-public class ProcessLogin extends HttpServlet {
-
+@WebServlet(name = "ProcessMessageSend", urlPatterns = {"/ProcessMessageSend"})
+public class ProcessMessageSend extends HttpServlet {
     
-    
-    public ProcessLogin(){
+    public ProcessMessageSend(){
         super();
     }
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
        
-        String useremail = (String)request.getParameter("email");
-        String userpassword = (String)request.getParameter("password");
+        int sender = Integer.parseInt((String)request.getParameter("sender"));
+        String receiver = (String)request.getParameter("receiver");
+        String subject = (String)request.getParameter("subject");
+        String message = (String)request.getParameter("message");
+
+
             
-        System.out.println("Process Login Email: " + useremail);
-        System.out.println("Process Login Password: " + userpassword);
-        
-        UserData userdata = null;
+        System.out.println("Processs sender: " + sender);
+        System.out.println("Processs receiver: " + receiver);
+        System.out.println("Processs subject: " + subject);
+        System.out.println("Processs message: " + message);
+
+
+        int userdata = 0;
         boolean errorFlag = false;
         String errorString = null;
         
-        if(useremail == null || userpassword == null || useremail.length() == 0 || userpassword.length() == 0){
+        if(subject.length() == 0 || message.length() == 0){
             errorFlag = true;
             errorString = "Your password and email is required to log in!";
         }
@@ -66,12 +63,10 @@ public class ProcessLogin extends HttpServlet {
                     String user = "root";
                     
                     /*The password of your database*/
-                    String password = "toor";
-
+                    String password = "password";
                     
                     String server_address = "jdbc:mysql://localhost:3306/cse305_part3?currentSchema=cse305_part3";
-        
-               
+                    
                     System.out.println("Connecting to driver...");
                     Class.forName("com.mysql.jdbc.Driver");
                     System.out.println("Connection Successful");
@@ -94,13 +89,13 @@ public class ProcessLogin extends HttpServlet {
             
             try{
                 System.out.println("Testing SQL connection");
-                userdata = DatabaseUtils.findUser(connection, useremail, userpassword);
+                userdata = DatabaseUtils.sendMessage(connection, subject, message,sender, receiver);
                 GenUtils.closeConnection(request);
                        
-                if(userdata == null){
-                    errorFlag = true;
-                    errorString = "Invalid password or email address";
-                }
+//                if(userdata == null){
+//                    errorFlag = true;
+//                    errorString = "Invalid password or email address";
+//                }
             } catch (SQLException ex) {
                 errorFlag = true;
                 errorString = ex.getMessage();
@@ -113,29 +108,28 @@ public class ProcessLogin extends HttpServlet {
         if(errorFlag){
             System.out.println("Error occured during login process in ProcessLogin");
             request.setAttribute("LOGIN_ERROR", errorString);
-            UserData temp = new UserData();
-            temp.setEmail(useremail);
-            temp.setPassword(userpassword);
-            request.setAttribute("invaliduser",temp);
+//            UserData temp = new UserData();
+//            temp.setEmail(useremail);
+//            temp.setPassword(userpassword);
+//            request.setAttribute("invaliduser",temp);
                    
-            RequestDispatcher d= this.getServletContext().getRequestDispatcher("/loginpage.jsp");
-            d.forward(request,response);
+//            RequestDispatcher d= this.getServletContext().getRequestDispatcher("/loginpage.jsp");
+//            d.forward(request,response);
         }
         else{
-            HttpSession session = request.getSession();
-            GenUtils.storeUserData(session, userdata);
-            //request.setAttribute("GROUP_ID","11");
-            
-            
-            /*Credentials validated - go to the user page: WORK IN PROGRESS*/
-            response.sendRedirect("userpage.jsp");
-
+//            HttpSession session = request.getSession();
+//            GenUtils.storeUserData(session, userdata);
+//            request.setAttribute("GROUP_ID","11");
+//            
+//            /*Credentials validated - go to the user page: WORK IN PROGRESS*/
+            RequestDispatcher d= this.getServletContext().getRequestDispatcher("/messagepage.jsp");
+            d.forward(request,response);
         }
         
         
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+ 
+      // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

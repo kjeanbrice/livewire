@@ -836,7 +836,6 @@ $(document).ready(function () {
                 $('.load_area').fadeIn(2000);
 
                 //console.log(post_data);
-
             },
             error: function () {
                 alert("Loading the group page failed");
