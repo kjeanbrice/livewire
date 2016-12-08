@@ -59,6 +59,9 @@
                     <span id ="guser_id" style ="display: none">
                         <%=user.getUserid()%>
                     </span>
+                      <span id ="guser_email" style ="display: none">
+                        <%=user.getEmail()%>
+                    </span>
                 </div>
             </div>
 
@@ -216,6 +219,33 @@
                                                 </div>
                                             </form>
                                         </div>
+                                          <h3 id="bestsellers" style="cursor:pointer">Best Seller Items</h3>
+                                        <div class="feed_form" id="best_seller_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+
+                                                        <div id="sellers"></div>
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
+                                      <h3 id="history" style="cursor:pointer">History</h3>
+                                        <div class="feed_form" id="history_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
+                                
+                                  <h3 id="suggest" style="cursor:pointer">Suggestions</h3>
+                                        <div class="feed_form" id="suggest_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+
+                                                        <div id="sellers"></div>
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
                                         <div class="clear"></div>
                                         <div class="feed_div" id="feed_div">
                                         <div id ="post_area_template">
