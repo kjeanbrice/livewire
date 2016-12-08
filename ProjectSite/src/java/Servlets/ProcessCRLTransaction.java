@@ -184,7 +184,17 @@ System.out.println(transaction_type);
                int user_id = Integer.parseInt(request.getParameter("user_id"));
                DatabaseUtils.deleteUser(connection, user_id);
                 
+            } else if(transaction_type.equals("UPDATE_USER")) {
+                int user_id = Integer.parseInt(request.getParameter("user_id"));
+                   String last_name = (String)request.getParameter("last_name");
+        String first_name = (String)request.getParameter("first_name");
+        String email = (String)request.getParameter("email");
+        String password = (String)request.getParameter("password");
+        String address = (String)request.getParameter("address");
+               DatabaseUtils.updateUser(connection, user_id, email, password, address, first_name, last_name);
+                
             }
+            
            
             
                        

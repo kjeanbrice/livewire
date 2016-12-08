@@ -23,10 +23,15 @@ $("#user_groups").click(function() {$("#user_group_space").fadeIn("slow");});
 $("#user_history").click(function() {$("#user_history_space").fadeIn("slow");});
 $("#btn_gethistory").click(function() {getCustomerHistory($("#user_history_space #user_email").val())});
 $("#create_transaction").click(function() {$("#create_transaction_space").fadeIn("slow");});
-$("#account_alter").click(function() {$("#account_alter_space").fadeIn("slow"); getUsers();});
+$("#account_alter").click(function() {$("#account_alter_space").fadeIn("slow");
+    $("#alter-form").fadeIn("slow");
+    
+    getUsers();});
 
 
-
+$("#register-submit").click(function() {
+     register() ;
+});
 
 $("#btn_make_transaction").click(function(){createTransaction($("#ad_id").val(), $("#seller_id").val(),$("#consumer_id").val(),$("#create_transaction_space #number_of_units").val(),
 $("#create_transaction_space #account_number").val());
@@ -263,7 +268,7 @@ function deleteUser(id) {
 
         }
         $("#suggest_space").fadeIn("slow");
-
+            
         }
 
     });
@@ -288,7 +293,7 @@ function deleteUser(id) {
             console.log(suggestions)
             for(m in suggestions.suggestions) {
               $("#user_history_space").append("<h5>" + suggestions.suggestions[m] +"<\/h5>")
-
+              
         }
         $("#user_history_space").fadeIn("slow");
 
@@ -314,11 +319,37 @@ function deleteUser(id) {
             var users = $.parseJSON( e.responseText);
             console.log(users);
             for(m in users.users) {
-              $("#account_alter_space").append("<h5>" + users.users[m].firstName + " " + users.users[m].lastName +"<\/h5>")
+               $("#account_alter_space").append("<h5 onclick=\"fillEditFormById("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">" + users.users[m].firstName + " " +users.users[m].lastName+ "<\/h5>")
                $("#account_alter_space").append("<a onclick=\"deleteUser("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">Delete<\/a>")
         }$("#account_alter_space").append("</hr>");
         $("#account_alter_space").fadeIn("slow");
 
+        }
+
+    });
+    }
+    
+        
+        function fillEditFormById(user_id) {
+  var senderId = parseInt($("#guser_id").text());
+    var $url = "/ProjectSite/ProcessCRLTransaction?transaction=GET_USERS"
+
+    $.ajax({
+        method: 'get',
+        url: $url,
+        dataType: 'application/json',
+        success: function (response) {
+         
+        },
+        error: function (e) {
+             console.log(e)
+            var users = $.parseJSON( e.responseText);
+            console.log(users);
+            for(m in users.users) {
+                if(parseInt(users.users[m].userID) == user_id) {
+                    fillEditForm(users.users[m].firstName,users.users[m].lastName,users.users[m].userEmail, users.users[m].address);
+                }
+            }
         }
 
     });
@@ -349,4 +380,64 @@ function deleteUser(id) {
         }
 
     });
+    }
+    
+     function register() {
+        var email = $("#remail").val();
+        var address = $("#address").val();
+        var password = $("#rpassword").val();
+        var first_name = $("#first_name").val()
+        var last_name = $("#last_name").val()
+        var $url = "/ProjectSite/ProcessRegistration?email=" + email + 
+          "&address=" +  address +
+          "&password=" + password +
+          "&first_name=" + first_name +
+  "&last_name=" + last_name;
+        console.log($url);
+        $.ajax({
+            method: 'get',
+            url: $url,
+            dataType: 'json',
+            success: function (send_sucess) {
+            },
+            error: function () {
+            }
+
+        });
+    }
+    
+    
+    
+     function updateUser(user_id) {
+        var email = $("#remail").val();
+        var address = $("#address").val();
+        var password = $("#rpassword").val();
+        var first_name = $("#first_name").val()
+        var last_name = $("#last_name").val()
+        var $url = "/ProjectSite/ProcessCRLTransaction?transaction=UPDATE_USER"
+        "&email=" + email + 
+          "&address=" +  address +
+          "&password=" + password +
+          "&first_name=" + first_name +
+        "&last_name=" + last_name
+        "&user_id=" + user_id;
+
+         $.ajax({
+            method: 'get',
+            url: $url,
+            dataType: 'json',
+            success: function (send_sucess) {
+            },
+            error: function () {
+            }
+
+        });
+    }
+    
+    
+    function fillEditForm(first_name,last_name,email, address) {
+        $("#remail").val(email);
+        $("#first_name").val(first_name);
+        $("#last_name").val(last_name);
+         $("#address").val(address);
     }

@@ -318,6 +318,33 @@
                                             
                                             
                                          <h3 id="account_alter" style="cursor:pointer">Add/Edit/Delete Account</h3>
+                                         
+                                         <form id="alter-form" action=" " method="post" role="form" style="display: none;">
+                                            <div class="form-group">
+                                                <input type="text" name="remail" id="remail" tabindex="1" class="form-control" placeholder="Email Address" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" name="rpassword" id="rpassword" tabindex="2" class="form-control" placeholder="Password">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="address" id="address" tabindex="1" class="form-control" placeholder="Address" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="first_name" id="first_name" tabindex="1" class="form-control" placeholder="First name" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="last_name" id="last_name" tabindex="1" class="form-control" placeholder="Last name" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-sm-offset-3">
+                                                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Add/Updatef">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                         
+                                         
                                         <div class="feed_form" id="account_alter_space" style="display:none">
                                             <form action="" id="frmpost" method="post">   
                                                     <div class="row_ele">

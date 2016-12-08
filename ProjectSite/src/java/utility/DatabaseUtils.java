@@ -680,6 +680,18 @@ public static void delete_advertisement(Connection connection ,int advertisement
      prepared_statement.executeUpdate();
  }
  
+  public static void updateUser(Connection connection  ,int user_id , String email , String password ,String address ,String first_name, String last_name ) throws SQLException{
+     PreparedStatement prepared_statement = connection.prepareStatement("UPDATE user_data SET email=?,password=?,address=?,first_name=?,last_name=? WHERE user_id=? ");
+
+     prepared_statement.setString(1,email);
+     prepared_statement.setString(2,password);
+     prepared_statement.setString(3,address);
+     prepared_statement.setString(4,first_name);
+     prepared_statement.setString(5,last_name);
+     prepared_statement.setInt(6,user_id);
+     prepared_statement.executeUpdate();
+ }
+ 
  public static ArrayList<String> getMailingList(Connection connection )
 throws SQLException{
      ResultSet rs1;
