@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>  
     <head>
-        <title>Group Page</title>
+        <title>Group</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles/gen-styles/group_postcomment_style.css">
@@ -22,16 +22,11 @@
 
     </head>
     <body>
-        <div class = "" >
+        <div class = "load_area" style="display:none" >
             <div class="container">
                 <div class ="row row-no-padding">
-                    <div class = " col-md-12 user-login-head">  
-                        <img src="images/temp_logo.png" alt ="Logo Here" height="50" width="50">
-                        <br>
-                        <span id = "team_name">
-                            THE DIRTY BITS
-                        </span>
-                        <%
+                    <div class = " col-md-12 user-login-head">
+                          <%
 
                             if (session.getAttribute("SIGNED_IN_USER") == null) {
                                 String errorString = "You must log in first!";
@@ -40,21 +35,31 @@
                                 d.forward(request, response);
                             }
 
-                            if (request.getAttribute("GROUP_ID") == null) {
-                                String errorString = "Invalid group number!";
-                                request.setAttribute("LOGIN_ERROR", errorString);
-                                RequestDispatcher d = this.getServletContext().getRequestDispatcher("/loginpage.jsp");
-                                d.forward(request, response);
+                            Integer group_number;
+                            if (request.getAttribute("GROUP_ID") == null || ((String)request.getAttribute("GROUP_ID")).length() == 0){
+                                group_number = -1;
                             }
-
-                            Integer group_number = Integer.parseInt((String) request.getAttribute("GROUP_ID"));
+                            else{
+                                group_number = Integer.parseInt((String) request.getAttribute("GROUP_ID"));
+                            }
                             UserData user = GenUtils.getUserData(request.getSession());
                
+                            String user_name = user.getFirstname().toUpperCase() + " " + user.getLastname().toUpperCase();
                             System.out.println("User: " + user.getFirstname() + "UserID: " + user.getUserid());
                             //RequestDispatcher d = this.getServletContext().getRequestDispatcher("/ProcessPopulateGroup");
                             //d.forward(request, response);
 
                         %>
+                        <img src="images/temp_logo.png" alt ="Logo Here" height="50" width="50">
+                        <br>
+                        <span id = "group_welcome">
+                            HI <%=user_name%>!
+                        </span>
+                        <br>
+                        <span id = "group_type">
+                            GROUP TYPE
+                        </span>
+                      
                         <span id ="group_id" style ="display: none">
                             <%=group_number%>
                         </span>
@@ -68,11 +73,11 @@
                 </div>
 
                 <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'>
-                <div class="group-box">
+                <div class="group-box" >
                     <aside class="sm-side">
                         <div class="user-head">
                             <a class="group-avatar" href="javascript:;">
-                                <img  width="64" hieght="60" src="images/user_icon.gif">
+                                <img class="userimg" src="images/user_icon.gif">
                             </a>
                             <div class="user-name" >
                                 <h5><span id="user_name_area" > </span></h5>
@@ -81,37 +86,46 @@
 
                         </div>
                         <div class="options-body">
-                            <form action = "#"> 
-                                <button type ="button" id ="btn_delete" access="admin" data-toggle="modal" data-target="#delete_modal" class="btn btn-deletegroup">
-                                    Delete Group
+                            <form action ="#">
+                                <button class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#creategroup_modal" id = "btn_viewmembers">
+                                   Create New Group
                                 </button>
-                            </form>
-
+                            </form> 
                             <form action ="#">
                                 <br>
                                 <button class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#groupmembers_modal" id = "btn_viewmembers">
                                    View Group Members
                                 </button>
                             </form>
-
+                            <form action ="#">
+                                <span id="join_button_area">
+                                <br>
+                                <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#joingroup_modal" id = "btn_join_group" >
+                                    Join Group
+                                </button>
+                                </span>
+                            </form>
+                            <form action ="#">
+                                <span id="unjoin_button_area">
+                                <br>
+                                <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#unjoingroup_modal" id = "btn_unjoin_group" >
+                                    Unjoin Group
+                                </button>
+                                </span>
+                            </form>
+                            
                             <form action ="#">
                                 <br>
                                 <a  class="btn btn-othergroup" access="admin" data-toggle="modal" data-target="#rename_modal" id = "btn_rename">
                                     Rename Group
                                 </a>
                             </form>
-                            <form action ="#">
+                            <form action = "#"> 
                                 <br>
-                                <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#joingroup_modal" id = "btn_join_group" >
-                                    Join Group
+                                <button type ="button" id ="btn_delete" access="admin" data-toggle="modal" data-target="#delete_modal" class="btn btn-deletegroup">
+                                    Delete Group
                                 </button>
-                            </form>
-                            <form action ="#">
-                                <br>
-                                <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#unjoingroup_modal" id = "btn_unjoin_group" >
-                                    Unjoin Group
-                                </button>
-                            </form>
+                            </form>                     
                         </div>
 
 
@@ -321,32 +335,40 @@
 
 
 
-                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="rename_modal" class="modal fade" style="display: none;">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                            <h4 class="modal-title">Rename your group</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form role="form" class="form-horizontal">
-                                                <div class="form-group">
-                                                    <label class="col-lg-2 control-label">New name</label>
-                                                    <div class="col-lg-10">
-                                                        <input type="text" placeholder="" id="input_rename" name = "input_rename" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-lg-offset-2 col-lg-10">
-                                                        <button class="btn btn-primary" id="rename_submit" type="button">Submit Request</button>
-                                                        <span  class = "lbl-error" id="err_rename"></span>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div><!-- /.modal-content -->
-                                </div><!-- /.modal-dialog -->
-                            </div><!-- /.modal -->
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="creategroup_modal" class="modal fade" style="display: none;">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <button aria-hidden="true" data-dismiss="modal" class="close" type="button" id = "btn_creategroup_close">×</button>
+                                          <h4 class="modal-title">Create New Group</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form role="form" class="form-horizontal">
+                                              <div class="form-group">
+                                                  <label class="col-lg-3 control-label">Group Name:</label>
+                                                  <div class="col-lg-9">
+                                                      <input type="text" placeholder="Name of group" id="input_group_name" class="form-control">
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label class="col-lg-3 control-label">Group Type:</label>
+                                                  <div class="col-lg-9">
+                                                      <input type="text" placeholder="Type of group" id="input_group_type" class="form-control">
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <span  class = "col-lg-12 control-label lbl-error" id="err_create_group"></span>
+                                              </div>
+                                              <div class="form-group">
+                                                  <div class="col-lg-offset-2 col-lg-10">
+                                                      <button class="btn btn-primary pull-right" type="button" id="btn_creategroup">Send Request</button>
+                                                  </div>
+                                              </div>
+                                          </form>
+                                      </div>
+                                  </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
 
                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="delete_modal" class="modal fade" style="display: none;">
                                 <div class="modal-dialog">
@@ -356,18 +378,41 @@
                                             <h4 class="modal-title">Delete your group</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <form role="form" class="form-horizontal" style= "text-align: center;">
+                                            <form action = "userpage.jsp" id = "form_delete" role="form" class="form-horizontal" style= "text-align: center;">
                                                 <div class="form-group">
                                                     <label class="col-lg-7 col-lg-offset-2 control-label">Are you sure you want to delete this group?</label>
-
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-lg-offset-2 col-lg-8">
-                                                        <button class="btn btn-primary" type="button" id="btn_delete">  Yes  </button>
-                                                        <button class="btn btn-primary" aria-hidden="true" data-dismiss="modal" type="button">  No  </button>
+                                                    <div class="col-lg-offset-2 col-lg-8">                           
+                                                            <button class="btn btn-primary" type="button" id="btn_delete_confirm">  Yes  </button>
+                                                            <button class="btn btn-primary" aria-hidden="true" data-dismiss="modal" type="button">  No  </button>                                               
                                                     </div>
                                                 </div>
                                             </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                            
+                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="creategroup_modal" class="modal fade" style="display: none;">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                            <h4 class="modal-title">Edit your comment</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="form-group">
+                                                <textarea name="edit_comment_feed" id="edit_feed" class="form-control edit_text_area"  rows="3" placeholder="New comment"></textarea>        
+                                            </div>
+                                            <div class="form-group ">
+                                                <div>
+                                                    <button class="btn btn-primary" id="btn_edit_comment" type="button">Submit Request</button>
+                                                    <span  class = "lbl-error" id="err_edit_comment"></span>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div><!-- /.modal-content -->
                                 </div><!-- /.modal-dialog -->

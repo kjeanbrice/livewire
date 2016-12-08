@@ -45,7 +45,7 @@ public class ProcessGroupTransaction extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
 
-            Connection connection = GenUtils.setUpConnection("root", "kJb_123456", "jdbc:mysql://localhost:3306/cse305_part4");
+            Connection connection = GenUtils.setUpConnection("root", "toor", "jdbc:mysql://localhost:3306/cse305_part4");
             String transaction_type = request.getParameter("transaction");
             if (transaction_type == null || transaction_type.length() == 0) {
                 out.println("TRANSACTION TYPE IS EMPTY");
@@ -240,7 +240,7 @@ public class ProcessGroupTransaction extends HttpServlet {
                 //  + "&newGroupName=" + new_group_name; 
                 response.setContentType("application/json");
                 String group_id = request.getParameter("groupID");
-                ArrayList<UserData> group_members = DatabaseUtils.getGroupMembers(connection, Integer.parseInt(group_id));           
+                ArrayList<UserData> group_members = DatabaseUtils.getGroupMembers(connection, Integer.parseInt(group_id));
                 if (group_members.isEmpty()) {
                     out.println("");
                     connection.close();
@@ -254,39 +254,39 @@ public class ProcessGroupTransaction extends HttpServlet {
                             json_output += group_members.get(i).generateJSON() + ",";
                         }
                     }
-                    json_output+= "}";
+                    json_output += "}";
                     System.out.println(json_output);
                     out.println(json_output);
                 }
                 connection.close();
-            }
-            else if(transaction_type.equals("REMOVE_MEMBER")){
+            } else if (transaction_type.equals("REMOVE_MEMBER")) {
                 String group_id = request.getParameter("groupID");
                 String user_id = request.getParameter("userID");
                 String user_email = request.getParameter("emailAddress");
-                
+
                 int return_val = 0;
                 GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
-                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                if (user_id.trim().equals("ADMIN_JOIN")) {
+                    return_val = DatabaseUtils.removeGroupMember(connection, group_data.getGroupID(), user_email.trim());
+                } else if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
                     return_val = DatabaseUtils.removeGroupMember(connection, group_data.getGroupID(), user_email.trim());
                 } else {
                     out.println(transaction_type + ":FAILURE");
                     connection.close();
                     return;
                 }
-                
+
                 if (return_val > 0) {
                     out.println(transaction_type + ":SUCCESS");
                 } else {
                     out.println(transaction_type + ":FAILURE");
                 }
-                connection.close();            
-            }
-            else if(transaction_type.equals("SEARCH_MEMBER")){
+                connection.close();
+            } else if (transaction_type.equals("SEARCH_MEMBER")) {
                 response.setContentType("application/json");
                 String group_id = request.getParameter("groupID");
                 String user_email = request.getParameter("emailAddress");
-                ArrayList<UserData> potential_members = DatabaseUtils.searchGroupMembers(connection, Integer.parseInt(group_id),user_email);           
+                ArrayList<UserData> potential_members = DatabaseUtils.searchGroupMembers(connection, Integer.parseInt(group_id), user_email);
                 if (potential_members.isEmpty()) {
                     out.println("");
                     connection.close();
@@ -300,38 +300,38 @@ public class ProcessGroupTransaction extends HttpServlet {
                             json_output += potential_members.get(i).generateJSON() + ",";
                         }
                     }
-                    json_output+= "}";
+                    json_output += "}";
                     System.out.println(json_output);
                     out.println(json_output);
                 }
                 connection.close();
-            }
-            else if(transaction_type.equals("ADD_MEMBER")){
+            } else if (transaction_type.equals("ADD_MEMBER")) {
                 String group_id = request.getParameter("groupID");
                 String user_id = request.getParameter("userID");
                 String user_email = request.getParameter("emailAddress");
-                
+
                 int return_val = 0;
                 GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
-                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                if (user_id.trim().equals("ADMIN_JOIN")) {
+                    return_val = DatabaseUtils.addGroupMember(connection, group_data.getGroupID(), user_email.trim());
+                } else if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
                     return_val = DatabaseUtils.addGroupMember(connection, group_data.getGroupID(), user_email.trim());
                 } else {
                     out.println(transaction_type + ":FAILURE");
                     connection.close();
                     return;
                 }
-                
+
                 if (return_val > 0) {
                     out.println(transaction_type + ":SUCCESS");
                 } else {
                     out.println(transaction_type + ":FAILURE");
                 }
-                connection.close();   
-            }
-             else if(transaction_type.equals("CHECK_JOINSTATUS")){
+                connection.close();
+            } else if (transaction_type.equals("CHECK_JOINSTATUS")) {
                 String group_id = request.getParameter("groupID");
                 String user_id = request.getParameter("userID");
-                
+
                 int return_val = 0;
                 GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
                 if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
@@ -339,17 +339,61 @@ public class ProcessGroupTransaction extends HttpServlet {
                     connection.close();
                     return;
                 } else {
-                    return_val = DatabaseUtils.checkJoinStatus(connection, group_data.getGroupID(),Integer.parseInt(user_id));
+                    return_val = DatabaseUtils.checkJoinStatus(connection, group_data.getGroupID(), Integer.parseInt(user_id));
                 }
-                
+
                 if (return_val > 0) {
                     out.println(transaction_type + ":JOINED");
                 } else {
                     out.println(transaction_type + ":UNJOINED");
                 }
-                connection.close();   
+                connection.close();
+            } else if (transaction_type.equals("DELETE_GROUP")) {
+                //"/ProjectSite/ProcessGroupTransaction?transaction=DELETE_GROUP&groupID=" + group_id + "&userID=" + user_id;
+                String group_id = request.getParameter("groupID");
+                String user_id = request.getParameter("userID");
+
+                int return_val = 0;
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
+                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                   return_val = DatabaseUtils.deleteGroup(connection,group_data.getGroupID());
+                } else {
+                    out.println(transaction_type + ":FAILURE");
+                    connection.close();
+                    return;
+                }
+
+                if (return_val > 0) {
+                    out.println(transaction_type + ":SUCCESS");
+                } else {
+                    out.println(transaction_type + ":FAILURE");
+                }
+                connection.close();
+
+            } else if (transaction_type.equals("CREATE_GROUP")) {
+                //int user_id, String group_name, String group_type
+                String user_id = request.getParameter("userID");
+                String groupName = request.getParameter("groupName");
+                String groupType = request.getParameter("groupType");
+      
+                if(groupName == null || groupType == null || user_id == null || groupName.trim().length() == 0 || groupType.trim().length() == 0){
+                    out.println("CREATE_GROUP:FAILURE");
+                    connection.close();
+                    return;
+                }
+                
+                int group_val = 0;
+                group_val = DatabaseUtils.createGroup(connection, Integer.parseInt(user_id),groupName.trim(),groupType.trim());
+               
+
+                if (group_val > 0) {
+                    out.println(group_val);
+                } else {
+                    out.println("CREATE_GROUP:FAILURE");
+                }
+                connection.close();
+
             }
-            
 
         } catch (ClassNotFoundException | NumberFormatException | SQLException ex) {
             String temp = ex.getMessage();

@@ -66,7 +66,7 @@ public class ProcessLogin extends HttpServlet {
                     String user = "root";
                     
                     /*The password of your database*/
-                    String password = "kJb_123456";
+                    String password = "toor";
                     
                     String server_address = "jdbc:mysql://localhost:3306/cse305_part4";
                     
@@ -122,11 +122,12 @@ public class ProcessLogin extends HttpServlet {
         else{
             HttpSession session = request.getSession();
             GenUtils.storeUserData(session, userdata);
-            request.setAttribute("GROUP_ID","11");
+            //request.setAttribute("GROUP_ID","11");
+            
             
             /*Credentials validated - go to the user page: WORK IN PROGRESS*/
-            RequestDispatcher d= this.getServletContext().getRequestDispatcher("/grouppage.jsp");
-            d.forward(request,response);
+            response.sendRedirect("userpage.jsp");
+   
         }
         
         

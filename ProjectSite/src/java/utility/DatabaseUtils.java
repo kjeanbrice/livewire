@@ -195,7 +195,7 @@ public class DatabaseUtils {
         System.out.println("Attempting to find a group with id: " + groupID);
         ResultSet rs1 = null;
         PreparedStatement pstm1 = connection.prepareStatement(
-                "SELECT G.user_id, G.group_name, G.creation_date "
+                "SELECT G.user_id, G.group_name, G.creation_date, G.group_type "
                 + "FROM group_data G "
                 + "WHERE G.group_id  = ?");
 
@@ -206,6 +206,7 @@ public class DatabaseUtils {
             int user_id = rs1.getInt("user_id");
             String group_name = rs1.getString("group_name");
             String creation_date = rs1.getString("creation_date");
+            String group_type = rs1.getString("group_type");
 
             ResultSet rs2 = null;
             PreparedStatement pstm2 = connection.prepareStatement(
@@ -230,6 +231,7 @@ public class DatabaseUtils {
 
                 groupdata.setCreationDate(creation_date);
                 groupdata.setGroupName(group_name);
+                groupdata.setGroupType(group_type);
 
                 ResultSet rs3 = null;
                 PreparedStatement pstm3 = connection.prepareStatement(
@@ -544,5 +546,58 @@ public class DatabaseUtils {
         return_val = prepared_statement.executeUpdate();
 
         return return_val;
+    }
+    
+    
+     public static int deleteGroup(Connection connection,int group_id) throws SQLException {
+        PreparedStatement prepared_statement;
+        int return_val = 0;
+        prepared_statement = connection.prepareStatement("DELETE FROM "
+                + "group_data "
+                + "WHERE group_data.group_id = ?");
+        prepared_statement.setInt(1, group_id);
+        return_val = prepared_statement.executeUpdate();
+        return return_val;
+    }
+     
+     
+     public static int createGroup(Connection connection,
+            int user_id, String group_name, String group_type)
+            throws SQLException {
+        
+        int group_id = -1;
+        PreparedStatement prepared_statement;
+        prepared_statement = connection.prepareStatement(" INSERT INTO group_data"
+                + "(user_id,group_name,group_type,creation_date) "
+                + "VALUES (?,?,?,?)");
+
+        prepared_statement.setInt(1, user_id);
+        prepared_statement.setString(2, group_name);
+        prepared_statement.setString(3, group_type);
+        prepared_statement.setTimestamp(4,
+                new java.sql.Timestamp(new java.util.Date().getTime()));
+        prepared_statement.executeUpdate();
+
+        ResultSet result_set = null;
+        prepared_statement = connection.prepareStatement(
+                "SELECT group_id"
+                + " FROM group_data"
+                + " WHERE group_data.user_id  = ? and group_data.group_name = ?");
+        prepared_statement.setInt(1, user_id);
+        prepared_statement.setString(2, group_name);
+        result_set = prepared_statement.executeQuery();
+
+        if (result_set.next()) {
+            group_id = result_set.getInt("group_id");
+            prepared_statement = connection.prepareStatement(" INSERT INTO page_data"
+                    + "(page_owner,associated_group,post_count) "
+                    + "VALUES (?,?,?)");
+            prepared_statement.setInt(1, user_id);
+            prepared_statement.setInt(2, result_set.getInt("group_id"));
+            prepared_statement.setInt(3, 0);
+            prepared_statement.executeUpdate();
+        }
+        
+        return group_id;
     }
 }

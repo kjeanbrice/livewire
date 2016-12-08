@@ -17,6 +17,7 @@ public class GroupData implements Serializable {
     private int groupID;
     private String groupName;
     private String creationDate;
+    private String groupType;
     private ArrayList<PostData> postData;
     private UserData user;
 
@@ -90,6 +91,36 @@ public class GroupData implements Serializable {
     public void setPostData(ArrayList<PostData> postData) {
         this.postData = postData;
     }
+    
+    
+     /**
+     * @return the user
+     */
+    public UserData getUser() {
+        return user;
+    }
+
+    /**
+     * @param user the user to set
+     */
+    public void setUser(UserData user) {
+        this.user = user;
+    }
+
+    /**
+     * @return the groupType
+     */
+    public String getGroupType() {
+        return groupType;
+    }
+
+    /**
+     * @param groupType the groupType to set
+     */
+    public void setGroupType(String groupType) {
+        this.groupType = groupType;
+    }
+
 
     public String generateJSON() {
         String outputString = "{\"groupID\":" + groupID + ","
@@ -97,6 +128,7 @@ public class GroupData implements Serializable {
                 + "\"lastName\":\"" + user.getLastname() + "\","
                 + "\"creationDate\":\"" + creationDate + "\","
                 + "\"groupName\":\"" + groupName + "\","
+                + "\"groupType\":\"" + groupType + "\","
                 + "\"email\":\"" + user.getEmail() + "\","
                 + "\"gUserID\":\"" + user.getUserid() + "\","
                 + "\"Posts\":[";
@@ -107,6 +139,7 @@ public class GroupData implements Serializable {
                     + "\"lastName\":\"" + getUser().getLastname() + "\","
                     + "\"creationDate\":\"" + creationDate + "\","
                     + "\"groupName\":\"" + groupName + "\","
+                    + "\"groupType\":\"" + groupType + "\","
                     + "\"email\":\"" + user.getEmail() + "\","
                     + "\"gUserID\":\"" + user.getUserid() + "\"}";
                     
@@ -129,20 +162,4 @@ public class GroupData implements Serializable {
         return outputString;
 
     }
-
-    /**
-     * @return the user
-     */
-    public UserData getUser() {
-        return user;
-    }
-
-    /**
-     * @param user the user to set
-     */
-    public void setUser(UserData user) {
-        this.user = user;
-    }
-
-
 }

@@ -62,10 +62,162 @@ $(document).ready(function () {
 
     /*Group page load functions defined here*/
     //Populate the group page with data from the database
-    load_grouppage();
+    
+    
+    var group_id = $('#group_id').text().trim();
+    if(group_id === "-1"){
+        $('#join_button_area').hide();
+        $('#unjoin_button_area').hide();
+        $('[access="admin"]').hide();
+        $('.load_area').show();
+        $('#creategroup_modal').modal('show');
+        $('#creategroup_modal').modal({ backdrop: 'static', keyboard: true });
+        $('#btn_creategroup_close').hide();
+    }
+    else{
+        load_grouppage();
+    }
+
+
+    /*Disable form submission on this page. All transactions are handled via ajax calls.*/
+    //$('form').on('submit', function (e) {
+       // e.preventDefault();
+    //});
 
 
     /*Transaction functions are defined here*/
+    
+
+    //Transaction for a user to join a group
+    $('#btn_creategroup').on('click', function () {
+        var group_name = $('#input_group_name').val().trim();
+        var group_type = $('#input_group_type').val().trim();
+        var user_id = $('#guser_id').text().trim();
+        var err_label = $('#err_create_group');
+        err_label.hide();
+        var url = "/ProjectSite/ProcessGroupTransaction?transaction=CREATE_GROUP&userID=" + user_id + "&groupName=" + group_name 
+                +"&groupType=" + group_type;
+        $.ajax({
+            method: 'get',
+            url: url,
+            dataType: 'text',
+            success: function (create_status) {
+                console.log("CREATE GROUP Success: " + create_status);
+                //$('#rename_modal').modal('hide');
+                var number_test = (/^\d+$/.test(create_status.trim()));
+                if ((/^\d+$/.test(create_status.trim()))) {
+                    console.log("Create Group - Is a number: " + create_status);
+                    
+                    $('#group_id').text(create_status.trim());
+                    $('#creategroup_modal').modal('hide');
+                    $('#btn_creategroup_close').show();
+                    load_grouppage();
+                    
+                    
+                } else {
+                    err_label.hide();
+                    err_label.text("One or more fields are empty. Both fields are required to create a group");
+                    err_label.fadeIn(1000);
+                    console.log("CREATE GROUP:ERROR");
+                }
+
+            },
+            error: function () {
+                console.log("CREATE GROUP Failure: Aw, It didn't connect to the servlet :(");
+            }
+
+        });
+    });
+    
+    
+    $('#btn_delete_confirm').on('click', function (e){
+        var group_id = $('#group_id').text().trim();
+        var user_id = $('#guser_id').text().trim();
+        var url = "/ProjectSite/ProcessGroupTransaction?transaction=DELETE_GROUP&groupID=" + group_id + "&userID=" + user_id;
+        $.ajax({
+            method: 'get',
+            url: url,
+            dataType: 'text',
+            success: function (remove_status) {
+                console.log("Delete Success: " + remove_status);          
+                if (remove_status.trim() === "DELETE_GROUP:SUCCESS") {
+                    console.log("DELETION SUCCESSFUL");
+                    $('#delete_modal').modal('hide');
+                    $('#form_delete').submit();
+                } else {
+                    console.log("DELETE_GROUP:An Error occured");
+                }
+            },
+            error: function () {
+                console.log("Add Member Failure: Aw, It didn't connect to the servlet :(");
+            }
+
+        });
+    });
+    
+    $('#btn_joingroup').on('click', function () {
+        var email_address = $('#guser_email').text().trim();
+        var group_id = $('#group_id').text().trim();
+        var url = "/ProjectSite/ProcessGroupTransaction?transaction=ADD_MEMBER&groupID=" + group_id + "&userID=ADMIN_JOIN" 
+                +"&emailAddress=" + email_address;
+
+        $.ajax({
+            method: 'get',
+            url: url,
+            dataType: 'text',
+            success: function (remove_status) {
+                console.log("Join Success: " + remove_status);
+                //$('#rename_modal').modal('hide');
+                if (remove_status.trim() === "ADD_MEMBER:SUCCESS") {
+                    console.log("User succesfully added to this group.");
+                    refresh_grouppage();
+                    $('#joingroup_modal').modal('hide');
+                } else {
+                    console.log("This user is already in the group or the email address you entered is invalid.");
+
+                }
+
+            },
+            error: function () {
+                console.log("Add Member Failure: Aw, It didn't connect to the servlet :(");
+            }
+
+        });
+    });
+    
+     $('#btn_unjoingroup').on('click', function () {
+        var email_address = $('#guser_email').text().trim();
+        var group_id = $('#group_id').text().trim();
+        var url = "/ProjectSite/ProcessGroupTransaction?transaction=REMOVE_MEMBER&groupID=" + group_id + "&userID=ADMIN_JOIN" 
+                +"&emailAddress=" + email_address;
+
+        $.ajax({
+            method: 'get',
+            url: url,
+            dataType: 'text',
+            success: function (remove_status) {
+                console.log("Unjoin Success: " + remove_status);
+                if (remove_status.trim() === "REMOVE_MEMBER:SUCCESS") {
+                    console.log("User succesfully removed to this group.");
+                    refresh_grouppage();
+                    $('#unjoingroup_modal').modal('hide');
+                } else {
+                    console.log("This user is not in this group. You should have never reached here.");
+
+                }
+
+            },
+            error: function () {
+                console.log("REMOVE_MEMBER Failure: Aw, It didn't connect to the servlet :(");
+            }
+
+        });
+    });
+
+
+
+
+
     //Transaction to make a post in the current group.
     $('#btnpost').on('click', function () {
         var post_content = $('#post_feed').val().trim();
@@ -431,10 +583,10 @@ $(document).ready(function () {
         load_groupmembers();
     });
 
-     $('#btn_remove_member').on('click', function () {
+    $('#btn_remove_member').on('click', function () {
         var email_address = $('#input_remove_member').val().trim();
         var err_label = $('#err_remove_member');
-        
+
         err_label.hide();
         if (email_address.length === 0) {
             err_label.text("The email address of the person you want to remove from this group cannot be empty.");
@@ -453,10 +605,9 @@ $(document).ready(function () {
                 success: function (remove_status) {
                     console.log("Remove member Sucess: " + remove_status);
                     //$('#rename_modal').modal('hide');
-                    if(remove_status.trim() === "REMOVE_MEMBER:SUCCESS"){
+                    if (remove_status.trim() === "REMOVE_MEMBER:SUCCESS") {
                         load_groupmembers();
-                    }
-                    else{
+                    } else {
                         err_label.text("The email address of the person you want to remove from this group is invalid.");
                         err_label.fadeIn(600);
                     }
@@ -470,17 +621,17 @@ $(document).ready(function () {
 
         }
     });
-    
-    
-    
+
+
+
     $('#btn_search').on('click', function () {
         search_for_users();
     });
-    
-     $('#btn_add_member').on('click', function () {
+
+    $('#btn_add_member').on('click', function () {
         var email_address = $('#input_add_member').val().trim();
         var err_label = $('#err_add_member');
-        
+
         err_label.hide();
         if (email_address.length === 0) {
             err_label.text("The email address of the person you want to add to this group cannot be empty.");
@@ -499,12 +650,11 @@ $(document).ready(function () {
                 success: function (remove_status) {
                     console.log("Add member Sucess: " + remove_status);
                     //$('#rename_modal').modal('hide');
-                    if(remove_status.trim() === "ADD_MEMBER:SUCCESS"){
+                    if (remove_status.trim() === "ADD_MEMBER:SUCCESS") {
                         search_for_users();
                         err_label.text("User succesfully added to this group.");
                         err_label.fadeIn(600);
-                    }
-                    else{
+                    } else {
                         err_label.text("This user is already in the group or the email address you entered is invalid.");
                         err_label.fadeIn(600);
                     }
@@ -519,14 +669,14 @@ $(document).ready(function () {
         }
     });
 
-     function search_for_users() {
+    function search_for_users() {
         var group_id = $('#group_id').text().trim();
         var users_area = $('.users_area');
         var email = $('#input_search_user').val().trim();
         var err_label = $('#err_add_member');
         err_label.hide();
-        
-         
+
+
         var $url = "/ProjectSite/ProcessGroupTransaction?transaction=SEARCH_MEMBER&groupID=" + group_id + "&emailAddress=" + email;
         $.ajax({
             method: 'post',
@@ -555,8 +705,8 @@ $(document).ready(function () {
 
         });
     }
-    
-    
+
+
     function load_groupmembers() {
         var group_id = $('#group_id').text().trim();
         var groupmembers_area = $('.groupmembers_area');
@@ -592,14 +742,12 @@ $(document).ready(function () {
     }
 
 
-    
-      function checkMemberStatus() {
+
+    function checkMemberStatus() {
         var group_id = $('#group_id').text().trim();
-        var guser_id =  $('#guser_id').text().trim();
-        
-        var temp = $('a.link_btn.edit_post_btn[post_userid='+guser_id+"]");
-        
-        
+        var guser_id = $('#guser_id').text().trim();
+
+        var temp = $('a.link_btn.edit_post_btn[post_userid=' + guser_id + "]");
         var $url = "/ProjectSite/ProcessGroupTransaction?transaction=CHECK_JOINSTATUS&groupID=" + group_id + "&userID=" + guser_id;
 
         $.ajax({
@@ -607,31 +755,35 @@ $(document).ready(function () {
             url: $url,
             dataType: 'text',
             success: function (message) {
-                  if(message.trim() === "CHECK_JOINSTATUS:OWNER"){
-                        $('#btn_join_group').hide();
-                        $('#btn_unjoin_group').hide();              
+                if (message.trim() === "CHECK_JOINSTATUS:OWNER") {
+                    $('#unjoin_button_area').hide();
+                    $('#join_button_area').hide();
+                    $('[access="admin"]').show()
+                } else if (message.trim() === "CHECK_JOINSTATUS:JOINED" || message.trim() === "CHECK_JOINSTATUS:UNJOINED") {
+                    $('#join_button_area').hide();
+                    $('#unjoin_button_area').hide();
+
+                    $('[access="admin"]').hide();
+
+                    $('a.link_btn.edit_comment_btn').hide();
+                    $('a.link_btn.delete_comment_btn').hide();
+
+                    $('a.link_btn.edit_comment_btn[comment_userid=' + guser_id + ']').show();
+                    $('a.link_btn.delete_comment_btn[comment_userid=' + guser_id + ']').show();
+
+                    $('a.link_btn.delete_post_btn').hide();
+                    $('a.link_btn.edit_post_btn').hide();
+
+                    $('a.link_btn.delete_post_btn[post_userid=' + guser_id + "]").show();
+                    $('a.link_btn.edit_post_btn[post_userid=' + guser_id + "]").show();
+
+                    if (message.trim() === "CHECK_JOINSTATUS:JOINED") {
+                        $('#unjoin_button_area').show();
+                    } else {
+                        $('#join_button_area').show();
                     }
-                    else if(message.trim() === "CHECK_JOINSTATUS:JOINED" || message.trim() === "CHECK_JOINSTATUS:UNJOINED"){
-                        $('#btn_join_group').hide();
-                        $('#btn_unjoin_group').hide();
-                        
-                        $('[access="admin"]').hide();
-                        
-                        $('a.link_btn.edit_comment_btn').hide();
-                        $('a.link_btn.edit_comment_btn[comment_userid='+guser_id+']').fadeIn(500);
-                        
-                        $('a.link_btn.delete_post_btn').hide();
-                         $('a.link_btn.edit_post_btn').hide();
-                        $('a.link_btn.edit_post_btn[post_userid='+guser_id+"]").fadeIn(500);
-                        
-                        if(message.trim() === "CHECK_JOINSTATUS:JOINED" ){
-                            $('#btn_unjoin_group').show();
-                        }
-                        else{
-                             $('#btn_join_group').show();
-                        }
-                    }
-                    
+                }
+
             },
             error: function () {
                 alert("Loading group members failed");
@@ -639,11 +791,12 @@ $(document).ready(function () {
 
         });
     }
-    
+
     function load_grouppage() {
         var user_name = $('#user_name_area');
         var email_area = $('#user_email a');
         var group_name = $('#group_name h3');
+        var group_type_area = $('#group_type');
 
 
         var group_id = $('#group_id').text().trim();
@@ -668,13 +821,20 @@ $(document).ready(function () {
                 var email_output = JSON_group_info.email;
                 email_area.text(email_output);
 
+                var group_type = JSON_group_info.groupType;
+                if (group_type.trim().length === 0) {
+                    group_type_area.text("THE DIRTY BITS");
+                } else {
+                    group_type_area.text(group_type.toUpperCase());
+                }
+
                 //var test1 = JSON_post_info.ownerFirstName;
                 var post_data = Mustache.render(template, JSON_group_info);
-                $('body').hide();
+                $('.load_area').hide();
                 post_comment_area.html(post_data);
                 checkMemberStatus();
-                $('body').fadeIn(2000);
-                
+                $('.load_area').fadeIn(2000);
+
                 //console.log(post_data);
 
             },
@@ -717,18 +877,15 @@ $(document).ready(function () {
 
                 //var test1 = JSON_post_info.ownerFirstName;
                 var post_data = Mustache.render(template, JSON_group_info);
-               
-                
+
+                post_comment_area.css('display', 'none');
                 post_comment_area.html(post_data);
-                checkMemberStatus();   
-                
-                
-                if (control !== undefined) {
-                    $('' + control).hide();
-                    
-                    $('' + control).fadeIn(2000);
-                }
-                
+                checkMemberStatus();
+                post_comment_area.fadeIn(1500);
+
+
+
+
                 //console.log(post_data);
 
             },
