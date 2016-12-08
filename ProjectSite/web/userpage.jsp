@@ -104,7 +104,7 @@
                         </form>
                          <form action ="#">
                             <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_leave">
+                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_log_out">
                                 Log Out
                             </a>
                         </form>

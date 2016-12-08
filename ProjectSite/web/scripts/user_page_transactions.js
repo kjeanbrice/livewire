@@ -25,7 +25,11 @@ var useremail = $("#guser_email").text().trim();
 $("#history").click(function() {$("#history_space").fadeIn("slow"); getCustomerHistory(useremail);});
 $("#suggest").click(function() {$("#suggest_space").fadeIn("slow"); getCustomerSuggestions(useremail);});
 $("#user_groups").click(function() {$("#user_groups_space").fadeIn("slow"); getCustomerGroups(useremail);});
-
+$("#btn_log_out").click(function() {
+    var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "loginpage.jsp";
+ window.location = link;
+    
+});
 
 });
  function getBestSellers() {
