@@ -5,12 +5,15 @@
  */
 package utility;
 
+import general.AdvertisementData;
 import general.CommentData;
 import general.GroupData;
+import general.MessageData;
 import general.PostData;
 import general.UserData;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
@@ -314,7 +317,7 @@ public class DatabaseUtils {
         return null;
     }
 
-    public static UserData findUser(Connection connection, String email, String password) throws SQLException {
+     public static UserData findUser(Connection connection, String email, String password) throws SQLException {
         System.out.println("Attempting to find user with email: " + email);
 
         String sql_statement = "SELECT L.user_email, L.user_id , L.account_type, L.user_password "
@@ -367,6 +370,20 @@ public class DatabaseUtils {
         return null;
     }
 
+     
+     public static int findUserIdByEmail(Connection connection, String email) throws SQLException {
+         int userId = 0;
+         ResultSet result_set = null;
+         PreparedStatement prepared_statement = connection.prepareStatement("SELECT user_id"
+                + " FROM user_data"
+                + " WHERE user_data.email  = ?");
+         prepared_statement.setString(1, email);
+         result_set = prepared_statement.executeQuery();
+         if(result_set.next()) {
+             userId = result_set.getInt("user_id");
+         }
+         return userId;
+     }
     /*Allows the owner of a group to create a new post*/
     public static int makePostGroup(Connection connection,
             int group_id, int user_id, String content) throws SQLException {
@@ -503,6 +520,209 @@ public class DatabaseUtils {
         return_val = prepared_statement.executeUpdate();
         return return_val;
     }
+    
+//        public static int sendMessage(Connection connection, String subject, String message , int sender, int receiver) throws SQLException{
+//        int return_val = 0;
+//        PreparedStatement prepared_statement;
+//
+//        Calendar currenttime = Calendar.getInstance();
+//        Date sqldate = new Date((currenttime.getTime()).getTime());
+//        prepared_statement = connection.prepareStatement(
+//                "INSERT INTO " + 
+//        "messages_data(message_date,message_subject,message_content,message_sender,message_receiver) VALUES (?,?,?,?,?)");
+//        prepared_statement.setDate(1,sqldate);
+//        prepared_statement.setString(2,subject);
+//        prepared_statement.setString(3,message);
+//        prepared_statement.setInt(4,sender);
+//        prepared_statement.setInt(5,receiver);
+//        return_val = prepared_statement.executeUpdate();
+//        return return_val;
+//    }
+        
+        public static int sendMessage(Connection connection, String subject, String message , int sender, String receiver) throws SQLException{
+        int return_val = 0;
+        PreparedStatement prepared_statement;
+        int message_receiver = findUserIdByEmail(connection,receiver);
+        Calendar currenttime = Calendar.getInstance();
+        Date sqldate = new Date((currenttime.getTime()).getTime());
+        prepared_statement = connection.prepareStatement(
+                "INSERT INTO " + 
+        "messages_data(message_date,message_subject,message_content,message_sender,message_receiver) VALUES (?,?,?,?,?)");
+        prepared_statement.setDate(1,sqldate);
+        prepared_statement.setString(2,subject);
+        prepared_statement.setString(3,message);
+        prepared_statement.setInt(4,sender);
+        prepared_statement.setInt(5,message_receiver);
+        return_val = prepared_statement.executeUpdate();
+        return return_val;
+        }
+        public static void deleteMessage(Connection connection, int messageId) throws SQLException {
+            PreparedStatement prepared_statement = connection.prepareStatement("DELETE FROM messages_data WHERE message_id=?");
+        prepared_statement.setInt(1,messageId);
+        prepared_statement.executeUpdate();
+        }
+    
+    public static ArrayList<MessageData> get_messages(Connection connection, int user_id ) throws SQLException{
+        ResultSet rs1 = null;
+        PreparedStatement prepared_statement;
+        ArrayList<MessageData> messages = new ArrayList<MessageData>();
+        prepared_statement = connection.prepareStatement("SELECT * FROM messages_data WHERE message_receiver=? ");
+        prepared_statement.setInt(1,user_id);
+        rs1 = prepared_statement.executeQuery();
+        int i =0;
+        while (rs1.next()) {
+            System.out.println("MESSAGES" + i);
+            int messageId = rs1.getInt("message_id");
+            String message_date = rs1.getString("message_date");
+            String message_subject = rs1.getString("message_subject");
+            String message_content = rs1.getString("message_content");
+            String message_sender = getUser(connection, rs1.getInt("message_sender")).getFirstname() + " " + getUser(connection, rs1.getInt("message_sender")).getLastname();
+            String message_receiver = getUser(connection, rs1.getInt("message_receiver")).getFirstname() + " " + getUser(connection, rs1.getInt("message_receiver")).getLastname();
+            messages.add(new MessageData(messageId, message_date, message_subject, message_content,rs1.getInt("message_sender"), rs1.getInt("message_receiver"), message_sender,message_receiver));
+        }
+        if(messages.size() == 0) return null;
+        else return messages;
+    }   
+    
+        public static ArrayList<String> get_Posts(Connection connection, int user_id ) throws SQLException{
+        ResultSet rs1 = null;
+        PreparedStatement prepared_statement;
+        ArrayList<String> posts = new ArrayList<String>();
+        prepared_statement = connection.prepareStatement("SELECT * FROM post_data WHERE user_id=? ");
+        prepared_statement.setInt(1,user_id);
+        rs1 = prepared_statement.executeQuery();
+        int i =0;
+        while (rs1.next()) {
+            String post = rs1.getString("content");
+            posts.add(post);
+        }
+        if(posts.size() == 0) return null;
+        else return posts;
+    }   
+        
+   public static ArrayList<AdvertisementData> getAds(Connection connection ) throws SQLException{
+        ResultSet rs1 = null;
+        PreparedStatement prepared_statement;
+        ArrayList<AdvertisementData> ads = new ArrayList<AdvertisementData>();
+        prepared_statement = connection.prepareStatement("SELECT * FROM advertisement_data");
+        rs1 = prepared_statement.executeQuery();
+        while (rs1.next()) {
+            AdvertisementData ad = new AdvertisementData(rs1.getInt("advertisement_id") ,rs1.getInt("employee_id"), rs1.getString("date_of_ad"), rs1.getString("type_of_ad"), rs1.getString("company"),rs1.getString("item_name"), rs1.getString("content"), rs1.getFloat("unit_price"),rs1.getInt("num_available"));
+            ads.add(ad);
+        }
+        if(ads.size() == 0) return null;
+        else return ads;
+    }   
+        
+        
+        
+        public static void createAdvertisement(Connection connection,int employee_id ,String date_of_ad ,String ty, String company , String item , String content , float unitPrice , int numAvailable ) throws SQLException {
+            System.out.println("creating");
+            PreparedStatement prepared_statement = connection. prepareStatement("INSERT INTO advertisement_data(employee_id ,date_of_ad , type_of_ad ,company ,item_name , content , unit_price ,num_available) VALUES (?,?,?,?,?,?,?,?)");
+            prepared_statement.setInt(1,employee_id);
+            prepared_statement.setDate(2,new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+            prepared_statement.setString(3,ty);
+            prepared_statement.setString(4,company);
+            prepared_statement.setString(5,item);
+            prepared_statement.setString(6,content);
+            prepared_statement.setFloat(7,unitPrice);
+            prepared_statement.setInt(8,numAvailable);
+            prepared_statement.executeUpdate();
+        }
+
+        
+public static void delete_advertisement(Connection connection ,int advertisement_id ) throws SQLException{ 
+    PreparedStatement prepared_statement = connection. prepareStatement("DELETE FROM advertisement_data WHERE advertisement_id=? ");
+    prepared_statement.setInt(1,advertisement_id);
+    prepared_statement.executeUpdate();
+}
+
+ public static ArrayList<AdvertisementData> get_advertisements(Connection connection ) throws SQLException{
+        ResultSet rs1 = null;
+        PreparedStatement prepared_statement;
+        ArrayList<AdvertisementData> ads = new ArrayList<AdvertisementData>();
+        prepared_statement = connection.prepareStatement("SELECT * FROM advertisement_data ");
+        rs1 = prepared_statement.executeQuery();
+        while (rs1.next()) {
+            int advertisement_id = rs1.getInt("message_id");
+            int employee_id = rs1.getInt("employee_id");
+            String date_of_ad = rs1.getString("date_of_ad");
+            String type_of_ad = rs1.getString("type_of_ad");
+            String company = rs1.getString("company");
+            String item_name = rs1.getString("item_name");
+            String content = rs1.getString("content");
+            float unit_price = rs1.getFloat("unit_price");
+            int num_available = rs1.getInt("num_available");
+            ads.add(new AdvertisementData(advertisement_id,employee_id,date_of_ad,type_of_ad,company,item_name,content,unit_price,num_available));
+        }
+        if(ads.size() == 0) return null;
+        else return ads;
+    }   
+ 
+ public static void generateTransaction(Connection connection  ,int ad_id , int seller_id , int consumer_id , java.sql.Date date , int number_of_units , int account_number) throws SQLException{
+     PreparedStatement prepared_statement = connection.prepareStatement("INSERT INTO sale_data( ad_id, seller_id ,consumer_id , transaction_date ,number_of_units , account_number) VALUES (?,?,?,?,?,?)");
+
+     prepared_statement.setInt(1,ad_id);
+     prepared_statement.setInt(2,seller_id);
+     prepared_statement.setInt(3,consumer_id);
+     prepared_statement.setDate(4,date);
+     prepared_statement.setInt(5,number_of_units);
+     prepared_statement.setInt(6,account_number);
+     prepared_statement.executeUpdate();
+ }
+ 
+ public static ArrayList<String> getMailingList(Connection connection )
+throws SQLException{
+     ResultSet rs1;
+     PreparedStatement prepared_statement = connection.prepareStatement("SELECT * FROM user_data WHERE email IS NOT NULL");
+     rs1 =  prepared_statement.executeQuery();
+     ArrayList<String> rval = new ArrayList<String>();
+     while(rs1.next()) {
+         rval.add(rs1.getString("email"));
+     }
+     return rval;
+ }
+ 
+ 
+public static ArrayList<String> getSuggestedItems( Connection connection , String email ) throws SQLException {
+    PreparedStatement prepared_statement = connection. prepareStatement("SELECT * FROM sale_data WHERE consumer_id=?");
+    int u = findUserIdByEmail(connection, email);
+    System.out.println("User is" + email + u);
+    prepared_statement.setInt(1,u);
+    ResultSet rs1 =  prepared_statement.executeQuery();
+    ArrayList<Integer> ids = new ArrayList<Integer>();
+    while(rs1.next()) {
+        int ad_id = rs1.getInt("ad_id");
+        System.out.println("AD ID IS" + ad_id); 
+        ids.add(ad_id);
+    }
+    ArrayList<String> suggestions = new ArrayList<String>();
+    System.out.println("ok"+ids.size());
+    for(int i = 0; i < ids.size(); i++) {
+        prepared_statement = connection.prepareStatement("SELECT * FROM advertisement_data WHERE advertisement_id=?");
+        prepared_statement.setInt(1,ids.get(i));        
+        rs1 = prepared_statement.executeQuery();
+        
+        rs1.first();
+        String company = rs1.getString("company");
+        String item = rs1.getString("item_name");
+        suggestions.add(item + " sold by " +company);
+    }
+    return suggestions;
+}
+
+public static ArrayList<String> getCustomerGroups( Connection connection ,String email ) throws SQLException{
+    PreparedStatement prepared_statement = connection. prepareStatement("SELECT * FROM group_data WHERE user_id=?");
+    int u = findUserIdByEmail(connection, email);
+    prepared_statement.setInt(1,u);
+    ResultSet rs1 =  prepared_statement.executeQuery();
+    ArrayList<String> groupNames = new ArrayList<String>();
+    while(rs1.next()) {
+        groupNames.add(rs1.getString("group_name"));
+    }
+    return groupNames;
+}
+
 
     public static int editComment(Connection connection,
             int comment_id, String content)
@@ -600,4 +820,33 @@ public class DatabaseUtils {
         
         return group_id;
     }
+
+    public static ArrayList<String> getBestSellers(Connection connection ) throws SQLException{
+PreparedStatement prepared_statement = connection. prepareStatement("SELECT ad_id,number_of_units,COUNT(*) FROM sale_data GROUP BY ad_id,number_of_units ORDER BY 2 DESC");
+ResultSet rs1= prepared_statement.executeQuery();
+ ArrayList<Integer> ids = new ArrayList<Integer>();
+ ArrayList<Integer> units = new ArrayList<Integer>();
+
+    while(rs1.next()) {
+        int ad_id = rs1.getInt("ad_id");
+        System.out.println("AD ID IS" + ad_id); 
+        ids.add(ad_id);
+        units.add(rs1.getInt("number_of_units"));
+    }
+    ArrayList<String> suggestions = new ArrayList<String>();
+    System.out.println("ok"+ids.size());
+    for(int i = 0; i < ids.size(); i++) {
+        prepared_statement = connection.prepareStatement("SELECT * FROM advertisement_data WHERE advertisement_id=?");
+        prepared_statement.setInt(1,ids.get(i));        
+        rs1 = prepared_statement.executeQuery();
+        
+        rs1.first();
+        String company = rs1.getString("company");
+        String item = rs1.getString("item_name");
+        suggestions.add(item + " sold by " +company +  "which sold " + units.get(i) + " units");
+    }
+    return suggestions;
 }
+ }
+
+

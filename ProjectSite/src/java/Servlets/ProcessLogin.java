@@ -67,9 +67,11 @@ public class ProcessLogin extends HttpServlet {
                     
                     /*The password of your database*/
                     String password = "toor";
+
                     
-                    String server_address = "jdbc:mysql://localhost:3306/cse305_part4";
-                    
+                    String server_address = "jdbc:mysql://localhost:3306/cse305_part3?currentSchema=cse305_part3";
+        
+               
                     System.out.println("Connecting to driver...");
                     Class.forName("com.mysql.jdbc.Driver");
                     System.out.println("Connection Successful");
@@ -127,7 +129,7 @@ public class ProcessLogin extends HttpServlet {
             
             /*Credentials validated - go to the user page: WORK IN PROGRESS*/
             response.sendRedirect("userpage.jsp");
-   
+
         }
         
         

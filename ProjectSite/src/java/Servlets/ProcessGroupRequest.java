@@ -40,7 +40,7 @@ public class ProcessGroupRequest extends HttpServlet {
             d.forward(request, response);
         }else{
              
-             RequestDispatcher d = this.getServletContext().getRequestDispatcher("/loginpage.jsp");
+             RequestDispatcher d = this.getServletContext().getRequestDispatcher("/grouppage.jsp");
              d.forward(request, response);
         }
 
