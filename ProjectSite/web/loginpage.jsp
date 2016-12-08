@@ -96,7 +96,10 @@ and open the template in the editor.
                                                 <input type="text" name="address" id="address" tabindex="1" class="form-control" placeholder="Address" value="">
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" name="state" id="state" tabindex="1" class="form-control" placeholder="State" value="">
+                                                <input type="text" name="first_name" id="first_name" tabindex="1" class="form-control" placeholder="First name" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="last_name" id="last_name" tabindex="1" class="form-control" placeholder="Last name" value="">
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">

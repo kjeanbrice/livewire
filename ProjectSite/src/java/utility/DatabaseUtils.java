@@ -11,6 +11,7 @@ import general.GroupData;
 import general.MessageData;
 import general.PostData;
 import general.UserData;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -847,6 +848,27 @@ ResultSet rs1= prepared_statement.executeQuery();
     }
     return suggestions;
 }
+
+    public static void register_user(Connection connection ,String first_name , String last_name, String address, String email, String password) throws SQLException{ 
+        System.out.println("FROM DBUTILS" + last_name+first_name+email+password+address);
+        PreparedStatement prepared_statement =connection.prepareStatement("INSERT INTO user_data(last_name ,first_name,email, address,account_number) VALUES (?,?,?,?,?)");
+        prepared_statement.setString(1,last_name);
+        prepared_statement.setString(2,first_name);
+        prepared_statement.setString(3,email);
+        prepared_statement.setString(4,address);        
+        int rand1 = (int)(Math.random()* 99999999);
+        int rand2 = (int)(Math.random()* 99999999);
+        prepared_statement.setString(5, String.valueOf(rand1) +String.valueOf(rand2));
+        prepared_statement.execute();
+        
+        
+         prepared_statement =connection.prepareStatement("INSERT INTO login(user_email ,user_password,user_id,account_type) VALUES (?,?,?,?)");
+        prepared_statement.setString(1,email);
+        prepared_statement.setString(2,password);
+        prepared_statement.setInt(3,findUserIdByEmail(connection,email));
+        prepared_statement.setInt(4,1);
+        prepared_statement.execute();
+    }
  }
 
 
