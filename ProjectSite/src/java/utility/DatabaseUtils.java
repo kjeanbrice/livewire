@@ -51,6 +51,143 @@ public class DatabaseUtils {
         return null;
     }
 
+    public static ArrayList<UserData> getAllUsers(Connection connection) throws SQLException {
+        ResultSet rs1 = null;
+        ArrayList<UserData> all_users = new ArrayList<UserData>();
+        PreparedStatement pstm1 = connection.prepareStatement(
+                "SELECT U.first_name, U.last_name,U.user_id, U.email"
+                + "FROM user_data U");
+        rs1 = pstm1.executeQuery();
+        while (rs1.next()) {
+
+            String last_name = rs1.getString("last_name");
+            String first_name = rs1.getString("first_name");
+            String address = rs1.getString("address");
+            String user_email = rs1.getString("email");
+            int user_id = rs1.getInt("user_id");
+
+            UserData user = new UserData();
+            user.setFirstname(first_name);
+            user.setLastname(last_name);
+            user.setAddress(address);
+            user.setEmail(user_email);
+            user.setUserid(user_id);
+            all_users.add(user);
+        }
+        return all_users;
+    }
+
+    public static ArrayList<UserData> getGroupMembers(Connection connection, int groupID) throws SQLException {
+        ResultSet rs1 = null;
+        ArrayList<UserData> all_users = new ArrayList<UserData>();
+        PreparedStatement pstm1 = connection.prepareStatement(
+                "SELECT DISTINCT U.first_name, U.last_name,U.user_id, U.email FROM user_data U, group_members G "
+                + "WHERE G.group_id = ? AND U.user_id IN"
+                + "(  SELECT G1.user_id    "
+                + " FROM group_members G1    "
+                + " WHERE G1.group_id = ?)");
+        pstm1.setInt(1, groupID);
+        pstm1.setInt(2, groupID);
+        rs1 = pstm1.executeQuery();
+        while (rs1.next()) {
+
+            String last_name = rs1.getString("last_name");
+            String first_name = rs1.getString("first_name");
+            String user_email = rs1.getString("email");
+            int user_id = rs1.getInt("user_id");
+
+            UserData user = new UserData();
+            user.setFirstname(first_name);
+            user.setLastname(last_name);
+            user.setEmail(user_email);
+            user.setUserid(user_id);
+            all_users.add(user);
+        }
+        return all_users;
+    }
+
+    public static ArrayList<UserData> searchGroupMembers(Connection connection, int groupID, String email) throws SQLException {
+        ResultSet rs1 = null;
+        ArrayList<UserData> all_users = new ArrayList<UserData>();
+        PreparedStatement pstm1 = connection.prepareStatement(
+                "SELECT DISTINCT U.first_name, U.last_name,U.user_id, U.email "
+                        + "FROM user_data U, group_members G "
+                        + "WHERE G.group_id = ? "
+                        + "AND U.user_id NOT IN(SELECT G1.user_id    "
+                        + "FROM group_members G1    "
+                        + "WHERE G1.group_id = ?) "
+                        + "AND U.email LIKE ?");
+        pstm1.setInt(1, groupID);
+        pstm1.setInt(2, groupID);
+        if(email.trim().length() == 0){
+            pstm1.setString(3, "%");
+        }
+        else{
+            pstm1.setString(3, "%" + email + "%");
+        }
+        
+        rs1 = pstm1.executeQuery();
+        while (rs1.next()) {
+
+            String last_name = rs1.getString("last_name");
+            String first_name = rs1.getString("first_name");
+            String user_email = rs1.getString("email");
+            int user_id = rs1.getInt("user_id");
+
+            UserData user = new UserData();
+            user.setFirstname(first_name);
+            user.setLastname(last_name);
+            user.setEmail(user_email);
+            user.setUserid(user_id);
+            all_users.add(user);
+        }
+        return all_users;
+    }
+    
+    public static int checkJoinStatus(Connection connection, int groupID, int userID) throws SQLException{
+        ResultSet rs1 = null;
+        PreparedStatement pstm1 = connection.prepareStatement("SELECT * FROM group_members G WHERE G.user_id = ? AND G.group_id = ?");
+        pstm1.setInt(1,userID);
+        pstm1.setInt(2,groupID);
+        rs1 = pstm1.executeQuery();
+        if(rs1.next()){
+            return 1;
+        }
+        return 0;
+    }
+    public static int removeGroupMember(Connection connection, int groupID, String user_email) throws SQLException {
+        int return_val = 0;
+        PreparedStatement prepared_statement;
+        prepared_statement = connection.prepareStatement("DELETE FROM group_members \n"
+                + "WHERE group_members.group_id = ? AND group_members.user_id = "
+                + "(SELECT U.user_id "
+                + "FROM user_data U "
+                + "WHERE U.email = ? )");
+        prepared_statement.setInt(1, groupID);
+        prepared_statement.setString(2,user_email);
+        return_val = prepared_statement.executeUpdate();
+        return return_val;
+    }
+    
+        public static int addGroupMember(Connection connection, int groupID, String user_email) throws SQLException {
+        int return_val = 0;
+        PreparedStatement prepared_statement;
+        
+        Timestamp  sqlDate = new java.sql.Timestamp(new java.util.Date().getTime());
+        prepared_statement = connection.prepareStatement("INSERT INTO group_members (group_id,user_id,join_date) "
+                + "VALUES (?,"
+                + "(Select U.user_id FROM user_data U WHERE U.email = ?),"
+                + "?)");
+        prepared_statement.setInt(1, groupID);
+        prepared_statement.setString(2,user_email);
+        prepared_statement.setTimestamp(3, sqlDate);
+        
+        return_val = prepared_statement.executeUpdate();
+        return return_val;
+    }
+    
+    
+
     public static GroupData populateGroup(Connection connection, int groupID) throws SQLException {
         GroupData groupdata = new GroupData();
         ArrayList<PostData> postdata = new ArrayList<PostData>();
@@ -164,10 +301,10 @@ public class DatabaseUtils {
                     }
                     groupdata.setPostData(postdata);
                     return groupdata;
-                }else{
+                } else {
                     return groupdata;
                 }
-               
+
             }
 
         }
@@ -287,8 +424,8 @@ public class DatabaseUtils {
         return 0;
     }
 
-    public static int like_comment(Connection connection,int comment_id, int user_id) throws SQLException {
-        
+    public static int like_comment(Connection connection, int comment_id, int user_id) throws SQLException {
+
         PreparedStatement prepared_statement;
         prepared_statement = connection.prepareStatement("INSERT INTO liked_comments(comment_id,user_id) VALUES (?,?)");
         prepared_statement.setInt(1, comment_id);
@@ -296,11 +433,10 @@ public class DatabaseUtils {
         int return_val = prepared_statement.executeUpdate();
         return return_val;
     }
-    
-    
+
     public static int like_post(Connection connection,
             int post_id, int user_id) throws SQLException {
-        
+
         PreparedStatement prepared_statement;
         int return_val = 0;
         prepared_statement = connection.prepareStatement("INSERT INTO liked_posts(post_id,user_id)"
@@ -310,8 +446,8 @@ public class DatabaseUtils {
         return_val = prepared_statement.executeUpdate();
         return return_val;
     }
-    
-     public static int unlike_post(Connection connection,
+
+    public static int unlike_post(Connection connection,
             int post_id, int user_id)
             throws SQLException {
         PreparedStatement prepared_statement;
@@ -325,8 +461,8 @@ public class DatabaseUtils {
         return_val = prepared_statement.executeUpdate();
         return return_val;
     }
-    
-     public static int unlike_comment(Connection connection,
+
+    public static int unlike_comment(Connection connection,
             int comment_id, int user_id)
             throws SQLException {
         int return_val = 0;
@@ -339,11 +475,10 @@ public class DatabaseUtils {
         return_val = prepared_statement.executeUpdate();
         return return_val;
     }
-     
-     
-       public static int remove_post_from_group(Connection connection,
-             int post_id) throws SQLException {
-        
+
+    public static int remove_post_from_group(Connection connection,
+            int post_id) throws SQLException {
+
         PreparedStatement prepared_statement;
         int return_val = 0;
         prepared_statement = connection.prepareStatement("DELETE "
@@ -354,7 +489,6 @@ public class DatabaseUtils {
         return return_val;
     }
 
-    
     public static int remove_comment_from_group(Connection connection,
             int comment_id) throws SQLException {
 
@@ -367,10 +501,9 @@ public class DatabaseUtils {
         return_val = prepared_statement.executeUpdate();
         return return_val;
     }
-    
-    
-      public static int editComment(Connection connection,
-            int comment_id,String content)
+
+    public static int editComment(Connection connection,
+            int comment_id, String content)
             throws SQLException {
         int return_val = 0;
         PreparedStatement prepared_statement;
@@ -383,7 +516,7 @@ public class DatabaseUtils {
         return_val = prepared_statement.executeUpdate();
         return return_val;
     }
-      
+
     public static int editPost(Connection connection,
             int post_id, String content)
             throws SQLException {
@@ -398,4 +531,18 @@ public class DatabaseUtils {
         return return_val;
     }
 
+    public static int renameGroup(Connection connection,
+            int group_id, String new_group_name)
+            throws SQLException {
+
+        int return_val;
+        PreparedStatement prepared_statement;
+        prepared_statement = connection.prepareStatement("UPDATE group_data "
+                + "SET group_data.group_name = ? WHERE group_data.group_id  = ?");
+        prepared_statement.setString(1, new_group_name);
+        prepared_statement.setInt(2, group_id);
+        return_val = prepared_statement.executeUpdate();
+
+        return return_val;
+    }
 }

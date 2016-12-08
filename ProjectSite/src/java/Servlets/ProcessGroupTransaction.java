@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -90,11 +91,10 @@ public class ProcessGroupTransaction extends HttpServlet {
                     out.println("COMMENT: SQL SUCCESS");
                 }
                 connection.close();
-            } else if(transaction_type.equals("LIKE_POST") || transaction_type.equals("DISLIKE_POST") || transaction_type.equals("DELETE_POST")){
+            } else if (transaction_type.equals("LIKE_POST") || transaction_type.equals("DISLIKE_POST") || transaction_type.equals("DELETE_POST")) {
 
                 String user_id = request.getParameter("userID");
                 String post_id = request.getParameter("postID");
-                
 
                 if (user_id == null || post_id == null) {
                     out.println(transaction_type + "INVALID ARGUMENTS FOR THE TRANSACTION");
@@ -106,22 +106,22 @@ public class ProcessGroupTransaction extends HttpServlet {
                 if (transaction_type.equals("LIKE_POST")) {
                     return_val = DatabaseUtils.like_post(connection, Integer.parseInt(post_id), Integer.parseInt(user_id));
                 }
-                
-                if(transaction_type.equals("DISLIKE_POST")){
+
+                if (transaction_type.equals("DISLIKE_POST")) {
                     return_val = DatabaseUtils.unlike_post(connection, Integer.parseInt(post_id), Integer.parseInt(user_id));
                 }
-                
-                if(transaction_type.equals("DELETE_POST")){
+
+                if (transaction_type.equals("DELETE_POST")) {
                     return_val = DatabaseUtils.remove_post_from_group(connection, Integer.parseInt(post_id));
                 }
-                
+
                 if (return_val > 0) {
                     out.println(transaction_type + ": SQL SUCESS");
                 } else {
                     out.println(transaction_type + ": SQL SQL QUERY SUCCESS");
                 }
                 connection.close();
-            } else if(transaction_type.equals("LIKE_COMMENT") || transaction_type.equals("DISLIKE_COMMENT") || transaction_type.equals("DELETE_COMMENT")) {
+            } else if (transaction_type.equals("LIKE_COMMENT") || transaction_type.equals("DISLIKE_COMMENT") || transaction_type.equals("DELETE_COMMENT")) {
 
                 String user_id = request.getParameter("userID");
                 String comment_id = request.getParameter("commentID");
@@ -131,21 +131,21 @@ public class ProcessGroupTransaction extends HttpServlet {
                     connection.close();
                     return;
                 }
-                
+
                 int return_val = 0;
-               
-                if(transaction_type.equals("LIKE_COMMENT")){
+
+                if (transaction_type.equals("LIKE_COMMENT")) {
                     return_val = DatabaseUtils.like_comment(connection, Integer.parseInt(comment_id), Integer.parseInt(user_id));
                 }
-                 
-                if(transaction_type.equals("DISLIKE_COMMENT")){
+
+                if (transaction_type.equals("DISLIKE_COMMENT")) {
                     return_val = DatabaseUtils.unlike_comment(connection, Integer.parseInt(comment_id), Integer.parseInt(user_id));
                 }
-                
-                if(transaction_type.equals("DELETE_COMMENT")){
+
+                if (transaction_type.equals("DELETE_COMMENT")) {
                     return_val = DatabaseUtils.remove_comment_from_group(connection, Integer.parseInt(comment_id));
                 }
-                
+
                 if (return_val > 0) {
                     out.println(transaction_type + ":SQL SUCCESS");
                 } else {
@@ -153,73 +153,203 @@ public class ProcessGroupTransaction extends HttpServlet {
                 }
                 connection.close();
                 //"/ProjectSite/ProcessGroupTransaction?transaction=EDIT_COMMENT&groupID=" + group_id + "&userID=" + user_id + "&content=" + edit_content 
-                   // + "&commentOwner=" + comment_userid + "&commentID=" + comment_id;
-            }else if(transaction_type.equals("EDIT_COMMENT")){
-                
+                // + "&commentOwner=" + comment_userid + "&commentID=" + comment_id;
+            } else if (transaction_type.equals("EDIT_COMMENT")) {
+
                 String group_id = request.getParameter("groupID");
                 String user_id = request.getParameter("userID");
                 String comment_owner = request.getParameter("commentOwner");
                 String comment_id = request.getParameter("commentID");
                 String content = request.getParameter("content");
-                
+
                 GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
                 int return_val = 0;
-                if(group_data.getUser().getUserid() == Integer.parseInt(user_id)){
-                    DatabaseUtils.editComment(connection, Integer.parseInt(comment_id), content);
-                }
-                else{
-                    if(Integer.parseInt(user_id) == Integer.parseInt(comment_owner)){
-                        DatabaseUtils.editComment(connection, Integer.parseInt(comment_id), content);
-                    }
-                    else{
+                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                    return_val = DatabaseUtils.editComment(connection, Integer.parseInt(comment_id), content);
+                } else {
+                    if (Integer.parseInt(user_id) == Integer.parseInt(comment_owner)) {
+                        return_val = DatabaseUtils.editComment(connection, Integer.parseInt(comment_id), content);
+                    } else {
                         out.println(transaction_type + ":SQL QUERY FAILED - NOT OWNER");
                         connection.close();
                         return;
                     }
                 }
-                
+
                 if (return_val > 0) {
                     out.println(transaction_type + ":SQL SUCCESS");
                 } else {
                     out.println(transaction_type + ":SQL QUERY FAILED");
                 }
                 connection.close();
-                
-        
-            }else if(transaction_type.equals("EDIT_POST")){
+
+            } else if (transaction_type.equals("EDIT_POST")) {
                 //"/ProjectSite/ProcessGroupTransaction?transaction=EDIT_POST&groupID=" + group_id + "&userID=" + user_id + "&content=" + edit_content 
-                  //  + "&postOwner=" + post_userid + "&postID=" + post_id;
-                  String group_id = request.getParameter("groupID");
+                //  + "&postOwner=" + post_userid + "&postID=" + post_id;
+                String group_id = request.getParameter("groupID");
                 String user_id = request.getParameter("userID");
                 String post_owner = request.getParameter("postOwner");
                 String post_id = request.getParameter("postID");
                 String content = request.getParameter("content");
-                
+
                 GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
                 int return_val = 0;
-                if(group_data.getUser().getUserid() == Integer.parseInt(user_id)){
-                    DatabaseUtils.editPost(connection, Integer.parseInt(post_id), content);
-                }
-                else{
-                    if(Integer.parseInt(user_id) == Integer.parseInt(post_owner)){
-                        DatabaseUtils.editPost(connection, Integer.parseInt(post_id), content);
-                    }
-                    else{
+                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                    return_val = DatabaseUtils.editPost(connection, Integer.parseInt(post_id), content);
+                } else {
+                    if (Integer.parseInt(user_id) == Integer.parseInt(post_owner)) {
+                        return_val = DatabaseUtils.editPost(connection, Integer.parseInt(post_id), content);
+                    } else {
                         out.println(transaction_type + ":SQL QUERY FAILED - NOT OWNER");
                         connection.close();
                         return;
                     }
                 }
-                
+
                 if (return_val > 0) {
                     out.println(transaction_type + ":SQL SUCCESS");
                 } else {
                     out.println(transaction_type + ":SQL QUERY FAILED");
                 }
                 connection.close();
+            } else if (transaction_type.equals("RENAME")) {
+                // "/ProjectSite/ProcessGroupTransaction?transaction=RENAME&groupID=" + group_id + "&userID=" + user_id + "&content=" + edit_content 
+                //  + "&newGroupName=" + new_group_name;
+                String group_id = request.getParameter("groupID");
+                String user_id = request.getParameter("userID");
+                String new_group_name = request.getParameter("newGroupName");
+
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
+                int return_val = 0;
+                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                    return_val = DatabaseUtils.renameGroup(connection, group_data.getGroupID(), new_group_name);
+                } else {
+                    out.println(transaction_type + ":SQL QUERY FAILED - NOT OWNER");
+                    connection.close();
+                    return;
+                }
+
+                if (return_val > 0) {
+                    out.println(transaction_type + ":SQL SUCCESS");
+                } else {
+                    out.println(transaction_type + ":SQL QUERY FAILED");
+                }
+                connection.close();
+            } else if (transaction_type.equals("GET_MEMBERS")) {
+                // "/ProjectSite/ProcessGroupTransaction?transaction=RENAME&groupID=" + group_id + "&userID=" + user_id + "&content=" + edit_content 
+                //  + "&newGroupName=" + new_group_name; 
+                response.setContentType("application/json");
+                String group_id = request.getParameter("groupID");
+                ArrayList<UserData> group_members = DatabaseUtils.getGroupMembers(connection, Integer.parseInt(group_id));           
+                if (group_members.isEmpty()) {
+                    out.println("");
+                    connection.close();
+                    return;
+                } else {
+                    String json_output = "{\"GroupMembers\":[";
+                    for (int i = 0; i < group_members.size(); i++) {
+                        if (i == group_members.size() - 1) {
+                            json_output += group_members.get(i).generateJSON() + "]";
+                        } else {
+                            json_output += group_members.get(i).generateJSON() + ",";
+                        }
+                    }
+                    json_output+= "}";
+                    System.out.println(json_output);
+                    out.println(json_output);
+                }
+                connection.close();
+            }
+            else if(transaction_type.equals("REMOVE_MEMBER")){
+                String group_id = request.getParameter("groupID");
+                String user_id = request.getParameter("userID");
+                String user_email = request.getParameter("emailAddress");
+                
+                int return_val = 0;
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
+                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                    return_val = DatabaseUtils.removeGroupMember(connection, group_data.getGroupID(), user_email.trim());
+                } else {
+                    out.println(transaction_type + ":FAILURE");
+                    connection.close();
+                    return;
+                }
+                
+                if (return_val > 0) {
+                    out.println(transaction_type + ":SUCCESS");
+                } else {
+                    out.println(transaction_type + ":FAILURE");
+                }
+                connection.close();            
+            }
+            else if(transaction_type.equals("SEARCH_MEMBER")){
+                response.setContentType("application/json");
+                String group_id = request.getParameter("groupID");
+                String user_email = request.getParameter("emailAddress");
+                ArrayList<UserData> potential_members = DatabaseUtils.searchGroupMembers(connection, Integer.parseInt(group_id),user_email);           
+                if (potential_members.isEmpty()) {
+                    out.println("");
+                    connection.close();
+                    return;
+                } else {
+                    String json_output = "{\"GroupMembers\":[";
+                    for (int i = 0; i < potential_members.size(); i++) {
+                        if (i == potential_members.size() - 1) {
+                            json_output += potential_members.get(i).generateJSON() + "]";
+                        } else {
+                            json_output += potential_members.get(i).generateJSON() + ",";
+                        }
+                    }
+                    json_output+= "}";
+                    System.out.println(json_output);
+                    out.println(json_output);
+                }
+                connection.close();
+            }
+            else if(transaction_type.equals("ADD_MEMBER")){
+                String group_id = request.getParameter("groupID");
+                String user_id = request.getParameter("userID");
+                String user_email = request.getParameter("emailAddress");
+                
+                int return_val = 0;
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
+                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                    return_val = DatabaseUtils.addGroupMember(connection, group_data.getGroupID(), user_email.trim());
+                } else {
+                    out.println(transaction_type + ":FAILURE");
+                    connection.close();
+                    return;
+                }
+                
+                if (return_val > 0) {
+                    out.println(transaction_type + ":SUCCESS");
+                } else {
+                    out.println(transaction_type + ":FAILURE");
+                }
+                connection.close();   
+            }
+             else if(transaction_type.equals("CHECK_JOINSTATUS")){
+                String group_id = request.getParameter("groupID");
+                String user_id = request.getParameter("userID");
+                
+                int return_val = 0;
+                GroupData group_data = DatabaseUtils.populateGroup(connection, Integer.parseInt(group_id));
+                if (group_data.getUser().getUserid() == Integer.parseInt(user_id)) {
+                    out.println(transaction_type + ":OWNER");
+                    connection.close();
+                    return;
+                } else {
+                    return_val = DatabaseUtils.checkJoinStatus(connection, group_data.getGroupID(),Integer.parseInt(user_id));
+                }
+                
+                if (return_val > 0) {
+                    out.println(transaction_type + ":JOINED");
+                } else {
+                    out.println(transaction_type + ":UNJOINED");
+                }
+                connection.close();   
             }
             
-                
 
         } catch (ClassNotFoundException | NumberFormatException | SQLException ex) {
             String temp = ex.getMessage();
