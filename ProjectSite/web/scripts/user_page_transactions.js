@@ -12,6 +12,10 @@ $("#bestsellers").click(function() {$("#best_seller_space").fadeIn("slow"); getB
 
 $("#btn_CRL_Panel").click(function() {var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "CRLpage.jsp"
         window.location = link;});
+    
+    $("#btn_manager_panel").click(function() {var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "managerpage.jsp"
+        window.location = link;});
+    
 
 
 $("#user_groups_space a").click(function() {

@@ -1,7 +1,6 @@
     <%-- 
-    Document   : grouppage
-    Created on : Nov 30, 2016, 4:14:54 PM
-    Author     : Karl
+    Document   : manager
+    Author     : Peter
 --%>
 
 <%@page import="general.UserData"%>
@@ -12,7 +11,7 @@
     
     <head>
     <head>
-        <title>Group Page</title>
+        <title>Manager Page</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles/gen-styles/group_postcomment_style.css">
@@ -85,37 +84,7 @@
 <!--                        <form action = "#"> 
                             <button type ="button" id ="btn_delete" data-toggle="modal" data-target="#delete_modal" class="btn btn-deletegroup">
                                 Delete Group
-                            </button>
-                        </form>-->
-                        
-                         <form action ="#">
-                             <br>
-                            <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#groupmembers_modal" id="btn_getemailList">
-                                Get Email List
-                            </button>
-                        </form>
-
-<!--                        <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#rename_modal" id = "btn_rename">
-                                Rename Group
-                            </a>
-                        </form>-->
-                         <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_leave">
-                                Log Out
-                            </a>
-                        </form>
-
-  <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_refresh">
-                                Refresh
-                            </a>
-                        </form>
-                    </div>
-
+         
 
 
 

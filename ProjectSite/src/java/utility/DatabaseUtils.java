@@ -353,8 +353,8 @@ public class DatabaseUtils {
                     String first_name = rs2.getString("first_name");
                     String address = rs2.getString("address");
                     String city = rs2.getString("city");
-                    String state = rs2.getString("state");
-                    int zip_code = rs2.getInt("zip_code");
+                    String state = rs2.getString("state"); 
+                   int zip_code = rs2.getInt("zip_code");
                     long telephone = rs2.getLong("telephone");
                     user_email = rs2.getString("email");
                     long account_number = rs2.getLong("account_number");
