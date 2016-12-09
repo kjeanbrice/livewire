@@ -89,7 +89,7 @@ $(document).ready(function () {
     
 
     //Transaction for a user to join a group
-    $('#btn_creategroup').on('click', function () {
+    $('#btn_creategroup_submit').on('click', function () {
         var group_name = $('#input_group_name').val().trim();
         var group_type = $('#input_group_type').val().trim();
         var user_id = $('#guser_id').text().trim();

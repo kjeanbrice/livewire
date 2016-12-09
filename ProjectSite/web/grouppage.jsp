@@ -288,32 +288,6 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
 
-
-                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="edit_comment_modal" class="modal fade" style="display: none;">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                            <h4 class="modal-title">Edit your comment</h4>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            <div class="form-group">
-                                                <textarea name="edit_comment_feed" id="edit_feed" class="form-control edit_text_area"  rows="3" placeholder="New comment"></textarea>        
-                                            </div>
-                                            <div class="form-group ">
-                                                <div>
-                                                    <button class="btn btn-primary" id="btn_edit_comment" type="button">Submit Request</button>
-                                                    <span  class = "lbl-error" id="err_edit_comment"></span>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div><!-- /.modal-content -->
-                                </div><!-- /.modal-dialog -->
-                            </div><!-- /.modal -->
-
-
                             <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="edit_comment_modal" class="modal fade" style="display: none;">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -390,7 +364,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-lg-offset-2 col-lg-10">
-                                                        <button class="btn btn-primary pull-right" type="button" id="btn_creategroup">Send Request</button>
+                                                        <button class="btn btn-primary pull-right" type="button" id="btn_creategroup_submit">Send Request</button>
                                                     </div>
                                                 </div>
                                             </form>
