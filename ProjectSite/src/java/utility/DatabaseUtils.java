@@ -385,6 +385,21 @@ public class DatabaseUtils {
          }
          return userId;
      }
+     
+     
+       public static String findUserAccountByEmail(Connection connection, String email) throws SQLException {
+         String account = "0";
+         ResultSet result_set = null;
+         PreparedStatement prepared_statement = connection.prepareStatement("SELECT account_number"
+                + " FROM user_data"
+                + " WHERE user_data.email  = ?");
+         prepared_statement.setString(1, email);
+         result_set = prepared_statement.executeQuery();
+         if(result_set.next()) {
+             account = result_set.getString("account_number");
+         }
+         return account;
+     }
     /*Allows the owner of a group to create a new post*/
     public static int makePostGroup(Connection connection,
             int group_id, int user_id, String content) throws SQLException {
@@ -668,15 +683,15 @@ public static void delete_advertisement(Connection connection ,int advertisement
         else return ads;
     }   
  
- public static void generateTransaction(Connection connection  ,int ad_id , int seller_id , int consumer_id , java.sql.Date date , int number_of_units , int account_number) throws SQLException{
+ public static void generateTransaction(Connection connection  ,int ad_id , int seller_id , int consumer_id , java.sql.Date date , int number_of_units , String account_number) throws SQLException{
      PreparedStatement prepared_statement = connection.prepareStatement("INSERT INTO sale_data( ad_id, seller_id ,consumer_id , transaction_date ,number_of_units , account_number) VALUES (?,?,?,?,?,?)");
-
+System.out.println("generating");
      prepared_statement.setInt(1,ad_id);
      prepared_statement.setInt(2,seller_id);
      prepared_statement.setInt(3,consumer_id);
      prepared_statement.setDate(4,date);
      prepared_statement.setInt(5,number_of_units);
-     prepared_statement.setInt(6,account_number);
+     prepared_statement.setString(6,account_number);
      prepared_statement.executeUpdate();
  }
  

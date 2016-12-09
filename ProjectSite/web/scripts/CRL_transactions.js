@@ -128,6 +128,7 @@ function getEmailList() {
             for(m in ads.ads) {
               $("#ads").append("<div id=\""+ads.ads[m].advertisement_id + "\"></div>")
               $("#"+ads.ads[m].advertisement_id).append("<h3>" + ads.ads[m].item_name +"<\/h3>")
+              $("#"+ads.ads[m].advertisement_id).append("<h4> AD ID is :" + ads.ads[m].advertisement_id +"<\/h4>")
               $("#"+ads.ads[m].advertisement_id).append("<h4>" + ads.ads[m].company +"<\/h4>")
               $("#"+ads.ads[m].advertisement_id).append("<p>" + ads.ads[m].content +"<\/p>")
               $("#"+ads.ads[m].advertisement_id).append("<a onclick=\"deleteAd("+ ads.ads[m].advertisement_id + ")\" href=\"javascript:void(0);\">Delete<\/a>")

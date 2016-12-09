@@ -154,17 +154,16 @@ System.out.println(transaction_type);
                 GenUtils.closeConnection(request);
 
             } else if(transaction_type.equals("GENERATE_TRANSACTION")) {
-                                System.out.println(request.getParameter("number_of_units"));
 
             Calendar currenttime = Calendar.getInstance();
             Date sqldate = new Date((currenttime.getTime()).getTime());
                 DatabaseUtils.generateTransaction(connection  ,
                         Integer.parseInt(request.getParameter("ad_id")) ,
-                        Integer.parseInt(request.getParameter("seller_id")) ,
-                        Integer.parseInt(request.getParameter("consumer_id")) , 
+                        DatabaseUtils.findUserIdByEmail(connection, request.getParameter("seller_id")) ,
+                        DatabaseUtils.findUserIdByEmail(connection, request.getParameter("consumer_id")) , 
                         sqldate , 
                        Integer.parseInt(request.getParameter("number_of_units")) , 
-                       Integer.parseInt(request.getParameter("account_number")));
+                       DatabaseUtils.findUserAccountByEmail(connection, request.getParameter("consumer_id")));
             } else if(transaction_type.equals("GET_USERS")) {
 
                 ArrayList<UserData> users = DatabaseUtils.getAllUsers(connection);

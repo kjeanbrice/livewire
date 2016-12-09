@@ -258,18 +258,16 @@
                                                 <input type="text" name="type" id="ad_id" tabindex="1" class="form-control" placeholder="AD ID" >
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" name="company" id="seller_id" tabindex="2" class="form-control" placeholder="Seller Id">
+                                                <input type="text" name="company" id="seller_id" tabindex="2" class="form-control" placeholder="Seller Email">
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" name="item" id="consumer_id" tabindex="2" class="form-control" placeholder="Consumer ID">
+                                                <input type="text" name="item" id="consumer_id" tabindex="2" class="form-control" placeholder="Consumer Email">
                                             </div>
                                               <div class="form-group">
                                                 <input type="text" name="price" id="number_of_units" tabindex="2" class="form-control" placeholder="Number">
                                             </div>
                                             
-                                             <div class="form-group">
-                                                <input type="text" name="num_available" id="account_number" tabindex="2" class="form-control" placeholder="Account Number">
-                                            </div>
+                                            
                                                     </div>  
                                        
                                                 <div class="row_ele">
