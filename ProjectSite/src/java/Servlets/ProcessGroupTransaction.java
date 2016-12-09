@@ -45,7 +45,7 @@ public class ProcessGroupTransaction extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
 
-            Connection connection = GenUtils.setUpConnection("root", "toor", "jdbc:mysql://localhost:3306/cse305_part4");
+            Connection connection = GenUtils.setUpConnection("root", "kJb_123456", "jdbc:mysql://localhost:3306/cse305_part4");
             String transaction_type = request.getParameter("transaction");
             if (transaction_type == null || transaction_type.length() == 0) {
                 out.println("TRANSACTION TYPE IS EMPTY");

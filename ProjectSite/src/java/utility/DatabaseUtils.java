@@ -115,19 +115,17 @@ public class DatabaseUtils {
         ArrayList<UserData> all_users = new ArrayList<UserData>();
         PreparedStatement pstm1 = connection.prepareStatement(
                 "SELECT DISTINCT U.first_name, U.last_name,U.user_id, U.email "
-                        + "FROM user_data U, group_members G "
-                        + "WHERE G.group_id = ? "
-                        + "AND U.user_id NOT IN(SELECT G1.user_id    "
+                        + "FROM user_data U "
+                        + "WHERE U.user_id NOT IN(SELECT G1.user_id    "
                         + "FROM group_members G1    "
                         + "WHERE G1.group_id = ?) "
                         + "AND U.email LIKE ?");
         pstm1.setInt(1, groupID);
-        pstm1.setInt(2, groupID);
         if(email.trim().length() == 0){
-            pstm1.setString(3, "%");
+            pstm1.setString(2, "%");
         }
         else{
-            pstm1.setString(3, "%" + email + "%");
+            pstm1.setString(2, "%" + email + "%");
         }
         
         rs1 = pstm1.executeQuery();
