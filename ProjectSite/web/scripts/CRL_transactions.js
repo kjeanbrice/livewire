@@ -1,3 +1,5 @@
+var register = true;
+var currentUserId = 0;
 $(document).ready(function () {
 
 
@@ -30,7 +32,12 @@ $("#account_alter").click(function() {$("#account_alter_space").fadeIn("slow");
 
 
 $("#register-submit").click(function() {
-     register() ;
+    if(register) {
+        register() ;
+    } else {
+        alert("updating");
+        updateUser();
+    }
 });
 
 $("#btn_make_transaction").click(function(){createTransaction($("#ad_id").val(), $("#seller_id").val(),$("#consumer_id").val(),$("#create_transaction_space #number_of_units").val(),
@@ -331,6 +338,7 @@ function deleteUser(id) {
     
         
         function fillEditFormById(user_id) {
+            currentUserId = user_id;
   var senderId = parseInt($("#guser_id").text());
     var $url = "/ProjectSite/ProcessCRLTransaction?transaction=GET_USERS"
 
@@ -348,6 +356,7 @@ function deleteUser(id) {
             for(m in users.users) {
                 if(parseInt(users.users[m].userID) == user_id) {
                     fillEditForm(users.users[m].firstName,users.users[m].lastName,users.users[m].userEmail, users.users[m].address);
+                    register = false;
                 }
             }
         }
@@ -408,20 +417,19 @@ function deleteUser(id) {
     
     
     
-     function updateUser(user_id) {
+     function updateUser() {
         var email = $("#remail").val();
         var address = $("#address").val();
         var password = $("#rpassword").val();
         var first_name = $("#first_name").val()
         var last_name = $("#last_name").val()
-        var $url = "/ProjectSite/ProcessCRLTransaction?transaction=UPDATE_USER"
+        var $url = "/ProjectSite/ProcessCRLTransaction?transaction=UPDATE_USER"+
         "&email=" + email + 
-          "&address=" +  address +
           "&password=" + password +
           "&first_name=" + first_name +
-        "&last_name=" + last_name
-        "&user_id=" + user_id;
-
+        "&last_name=" + last_name +
+        "&user_id=" + currentUserId+
+                          "&address=" +  encodeURIComponent(address) ;
          $.ajax({
             method: 'get',
             url: $url,

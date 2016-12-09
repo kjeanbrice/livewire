@@ -66,7 +66,7 @@ public class ProcessLogin extends HttpServlet {
                     String user = "root";
                     
                     /*The password of your database*/
-                    String password = "toor";
+                    String password = "password";
 
                     
                     String server_address = "jdbc:mysql://localhost:3306/cse305_part3?currentSchema=cse305_part3";
