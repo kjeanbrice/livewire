@@ -721,7 +721,7 @@ throws SQLException{
  
  
 public static ArrayList<String> getSuggestedItems( Connection connection , String email ) throws SQLException {
-    PreparedStatement prepared_statement = connection. prepareStatement("SELECT * FROM sale_data WHERE consumer_id=?");
+    PreparedStatement prepared_statement = connection. prepareStatement("SELECT DISTINCT ad_id FROM sale_data WHERE consumer_id=?");
     int u = findUserIdByEmail(connection, email);
     System.out.println("User is" + email + u);
     prepared_statement.setInt(1,u);
@@ -746,6 +746,64 @@ public static ArrayList<String> getSuggestedItems( Connection connection , Strin
     }
     return suggestions;
 }
+
+//public static ArrayList<String> getCustomerAds( Connection connection ) throws SQLException {
+//    PreparedStatement prepared_statement = connection. prepareStatement("SELECT * FROM sale_data WHERE consumer_id=?");
+//    int u = findUserIdByEmail(connection, email);
+//    System.out.println("User is" + email + u);
+//    prepared_statement.setInt(1,u);
+//    ResultSet rs1 =  prepared_statement.executeQuery();
+//    ArrayList<Integer> ids = new ArrayList<Integer>();
+//    while(rs1.next()) {
+//        int ad_id = rs1.getInt("ad_id");
+//        System.out.println("AD ID IS" + ad_id); 
+//        ids.add(ad_id);
+//    }
+//    ArrayList<String> suggestions = new ArrayList<String>();
+//    System.out.println("ok"+ids.size());
+//    for(int i = 0; i < ids.size(); i++) {
+//        prepared_statement = connection.prepareStatement("SELECT * FROM advertisement_data WHERE advertisement_id=?");
+//        prepared_statement.setInt(1,ids.get(i));        
+//        rs1 = prepared_statement.executeQuery();
+//        
+//        rs1.first();
+//        String company = rs1.getString("company");
+//        String item = rs1.getString("item_name");
+//        suggestions.add(item + " sold by " +company);
+//    }
+//    return suggestions;
+//}
+
+public static void buyGivenProductAndSupplier( Connection connection , String item, String supplier,String email ) throws SQLException {
+        PreparedStatement prepared_statement = connection.prepareStatement("SELECT * FROM advertisement_data WHERE item_name=? AND company=?");
+        prepared_statement.setString(1,item); 
+        prepared_statement.setString(2,supplier);        
+        
+        Calendar currenttime = Calendar.getInstance();
+        Date sqldate = new Date((currenttime.getTime()).getTime());
+        ResultSet rs1 = prepared_statement.executeQuery();
+        System.out.println("executed");
+        rs1.first();
+        String company = rs1.getString("company");
+        System.out.println("Comp is" + company);
+        int seller_id = rs1.getInt("employee_id");
+        int ad_id = rs1.getInt("advertisement_id");
+         prepared_statement = connection.prepareStatement("INSERT INTO sale_data( ad_id, seller_id ,consumer_id , transaction_date ,number_of_units , account_number) VALUES (?,?,?,?,?,?)");
+       
+     System.out.println("generating");
+     prepared_statement.setInt(1,ad_id);
+     prepared_statement.setInt(2,seller_id);
+     prepared_statement.setInt(3,findUserIdByEmail(connection, email));
+     prepared_statement.setDate(4,sqldate);
+     prepared_statement.setInt(5,1);
+     prepared_statement.setString(6,findUserAccountByEmail( connection, email));
+     prepared_statement.executeUpdate();
+        
+    
+    
+    
+}
+
 
 public static ArrayList<String> getCustomerGroups( Connection connection ,String email ) throws SQLException{
     PreparedStatement prepared_statement = connection. prepareStatement("SELECT * FROM group_data WHERE user_id=?");
@@ -879,7 +937,7 @@ public static ArrayList<String> getAllGroups( Connection connection  ) throws SQ
     }
 
     public static ArrayList<String> getBestSellers(Connection connection ) throws SQLException{
-PreparedStatement prepared_statement = connection. prepareStatement("SELECT ad_id,number_of_units,COUNT(*) FROM sale_data GROUP BY ad_id,number_of_units ORDER BY 2 DESC");
+PreparedStatement prepared_statement = connection. prepareStatement("SELECT  DISTINCT ad_id, number_of_units,COUNT(*) FROM sale_data GROUP BY  ad_id,number_of_units ORDER BY 2 DESC");
 ResultSet rs1= prepared_statement.executeQuery();
  ArrayList<Integer> ids = new ArrayList<Integer>();
  ArrayList<Integer> units = new ArrayList<Integer>();
