@@ -37,11 +37,11 @@
                             }
 
                             Integer group_number;
-                            if (request.getAttribute("GROUP_ID") == null || ((String)request.getAttribute("GROUP_ID")).length() == 0){
+                            if (request.getParameter("groupID") == null || ((String)request.getParameter("groupID")).length() == 0){
                                 group_number = -1;
                             }
                             else{
-                                group_number = Integer.parseInt((String) request.getAttribute("GROUP_ID"));
+                                group_number = Integer.parseInt((String) request.getParameter("groupID"));
                             }
                             UserData user = GenUtils.getUserData(request.getSession());
                

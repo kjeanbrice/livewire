@@ -70,8 +70,8 @@ $(document).ready(function () {
         $('#unjoin_button_area').hide();
         $('[access="admin"]').hide();
         $('.load_area').show();
-        $('#creategroup_modal').modal('show');
         $('#creategroup_modal').modal({ backdrop: 'static', keyboard: true });
+        $('#creategroup_modal').modal('show');   
         $('#btn_creategroup_close').hide();
     }
     else{
@@ -836,6 +836,7 @@ $(document).ready(function () {
                 $('.load_area').fadeIn(2000);
 
                 //console.log(post_data);
+
             },
             error: function () {
                 alert("Loading the group page failed");
