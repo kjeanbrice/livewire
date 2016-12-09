@@ -57,9 +57,9 @@ public class ProcessPopulateGroup extends HttpServlet {
                     String user = "root";
 
                     /*The password of your database*/
-                    String password = "kJb_123456";
+                    String password = "password";
 
-                    String server_address = "jdbc:mysql://localhost:3306/cse305_part4";
+                    String server_address = "jdbc:mysql://localhost:3306/cse305_part3";
 
                     System.out.println("Connecting to driver...");
                     Class.forName("com.mysql.jdbc.Driver");

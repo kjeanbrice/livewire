@@ -83,7 +83,9 @@ System.out.println(transaction_type);
                 out.print(returnString);
                 out.flush();
                 GenUtils.closeConnection(request);
-            } else if(transaction_type.equals("ITEM_SUGGESTION")){
+            }
+            
+            else if(transaction_type.equals("ITEM_SUGGESTION")){
                 ArrayList<String> items = DatabaseUtils.getSuggestedItems(connection,request.getParameter("email"));
                 String returnString = "{\"suggestions\":[ ";
                 for(int i = 0; i < items.size();i++) {
@@ -218,7 +220,14 @@ System.out.println(request.getQueryString());
                DatabaseUtils.updateUser(connection, update_user_id, email, password, address, first_name, last_name);
                 
             }
-            
+             else if(transaction_type.equals("BUY")) {
+                String product = request.getParameter("product");
+                String supplier = request.getParameter("supplier");
+                String email = request.getParameter("email");
+                System.out.println(request.getQueryString());
+               DatabaseUtils.buyGivenProductAndSupplier(connection, product, supplier, email);
+                
+            }
            
             
                        
