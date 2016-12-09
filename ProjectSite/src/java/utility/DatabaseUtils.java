@@ -385,6 +385,21 @@ public class DatabaseUtils {
          }
          return userId;
      }
+     
+     
+       public static String findUserAccountByEmail(Connection connection, String email) throws SQLException {
+         String account = "0";
+         ResultSet result_set = null;
+         PreparedStatement prepared_statement = connection.prepareStatement("SELECT account_number"
+                + " FROM user_data"
+                + " WHERE user_data.email  = ?");
+         prepared_statement.setString(1, email);
+         result_set = prepared_statement.executeQuery();
+         if(result_set.next()) {
+             account = result_set.getString("account_number");
+         }
+         return account;
+     }
     /*Allows the owner of a group to create a new post*/
     public static int makePostGroup(Connection connection,
             int group_id, int user_id, String content) throws SQLException {
@@ -668,27 +683,27 @@ public static void delete_advertisement(Connection connection ,int advertisement
         else return ads;
     }   
  
- public static void generateTransaction(Connection connection  ,int ad_id , int seller_id , int consumer_id , java.sql.Date date , int number_of_units , int account_number) throws SQLException{
+ public static void generateTransaction(Connection connection  ,int ad_id , int seller_id , int consumer_id , java.sql.Date date , int number_of_units , String account_number) throws SQLException{
      PreparedStatement prepared_statement = connection.prepareStatement("INSERT INTO sale_data( ad_id, seller_id ,consumer_id , transaction_date ,number_of_units , account_number) VALUES (?,?,?,?,?,?)");
-
+System.out.println("generating");
      prepared_statement.setInt(1,ad_id);
      prepared_statement.setInt(2,seller_id);
      prepared_statement.setInt(3,consumer_id);
      prepared_statement.setDate(4,date);
      prepared_statement.setInt(5,number_of_units);
-     prepared_statement.setInt(6,account_number);
+     prepared_statement.setString(6,account_number);
      prepared_statement.executeUpdate();
  }
  
   public static void updateUser(Connection connection  ,int user_id , String email , String password ,String address ,String first_name, String last_name ) throws SQLException{
-     PreparedStatement prepared_statement = connection.prepareStatement("UPDATE user_data SET email=?,password=?,address=?,first_name=?,last_name=? WHERE user_id=? ");
 
+      PreparedStatement prepared_statement = connection.prepareStatement("UPDATE user_data SET email=?,address=?,first_name=?,last_name=? WHERE user_id=? ");
      prepared_statement.setString(1,email);
-     prepared_statement.setString(2,password);
-     prepared_statement.setString(3,address);
-     prepared_statement.setString(4,first_name);
-     prepared_statement.setString(5,last_name);
-     prepared_statement.setInt(6,user_id);
+     prepared_statement.setString(2,address);
+     prepared_statement.setString(3,first_name);
+     prepared_statement.setString(4,last_name);
+     prepared_statement.setInt(5,user_id);
+
      prepared_statement.executeUpdate();
  }
  
@@ -754,6 +769,17 @@ public static ArrayList<String> getCustomerGroupsWithId( Connection connection ,
     }
     return groupNames;
 }
+
+public static ArrayList<String> getAllGroups( Connection connection  ) throws SQLException{
+    PreparedStatement prepared_statement = connection. prepareStatement("SELECT * FROM group_data");
+    ResultSet rs1 =  prepared_statement.executeQuery();
+    ArrayList<String> groupNames = new ArrayList<String>();
+    while(rs1.next()) {
+        groupNames.add(rs1.getString("group_name") + "~" + rs1.getInt("group_id"));
+    }
+    return groupNames;
+}
+
 
     public static int editComment(Connection connection,
             int comment_id, String content)

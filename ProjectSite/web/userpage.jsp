@@ -262,6 +262,18 @@
                                             </form>
                                         </div
                                     </div>                                    </div>
+                        
+                        
+                        
+                         <h3 id="all_groups" style="cursor:pointer">Get All Possible Groups</h3>
+                                        <div class="feed_form" id="all_groups_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+                                     
+                                                        <div id="suggestions"></div>
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
                                         <div class="clear"></div>
                                         <div class="feed_div" id="feed_div">
                                         <div id ="post_area_template">

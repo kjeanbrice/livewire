@@ -258,18 +258,16 @@
                                                 <input type="text" name="type" id="ad_id" tabindex="1" class="form-control" placeholder="AD ID" >
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" name="company" id="seller_id" tabindex="2" class="form-control" placeholder="Seller Id">
+                                                <input type="text" name="company" id="seller_id" tabindex="2" class="form-control" placeholder="Seller Email">
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" name="item" id="consumer_id" tabindex="2" class="form-control" placeholder="Consumer ID">
+                                                <input type="text" name="item" id="consumer_id" tabindex="2" class="form-control" placeholder="Consumer Email">
                                             </div>
                                               <div class="form-group">
                                                 <input type="text" name="price" id="number_of_units" tabindex="2" class="form-control" placeholder="Number">
                                             </div>
                                             
-                                             <div class="form-group">
-                                                <input type="text" name="num_available" id="account_number" tabindex="2" class="form-control" placeholder="Account Number">
-                                            </div>
+                                            
                                                     </div>  
                                        
                                                 <div class="row_ele">
@@ -320,6 +318,7 @@
                                          <h3 id="account_alter" style="cursor:pointer">Add/Edit/Delete Account</h3>
                                          
                                          <form id="alter-form" action=" " method="post" role="form" style="display: none;">
+                                             <h4>Click on a name to view and edit info about the account</h4>
                                             <div class="form-group">
                                                 <input type="text" name="remail" id="remail" tabindex="1" class="form-control" placeholder="Email Address" value="">
                                             </div>
@@ -338,7 +337,7 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-sm-6 col-sm-offset-3">
-                                                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Add/Updatef">
+                                                        <input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Add/Update">
                                                     </div>
                                                 </div>
                                             </div>
