@@ -295,6 +295,24 @@
                                             </form>
                                         </div
                                     </div>                                    </div>
+                            
+                            
+                            
+                                   <h3 id="transaction_item_list" style="cursor:pointer">List Transactions By Item Name</h3>
+                                        <div class="feed_form" id="transaction_item_list_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+                                                      <div class="form-group">
+                                                <input type="text" name="type" id="item_name_for_transaction" tabindex="1" class="form-control" placeholder="User Email" >
+                                                      </div>
+                                                <div class="row_ele">
+                                                    <input class="btn btn-primary" id="btn_get_transactions_by_item" type="button" name="get_transactions_by_user" value="Get Transactions"/>
+                                                    <span  class = "lbl-error" id="err_post"></span>
+                                                </div>
+                                                        <div id="suggestions"></div>
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
                                             
                                          <h3 id="account_alter" style="cursor:pointer">Add/Edit/Delete Account</h3>
                                          

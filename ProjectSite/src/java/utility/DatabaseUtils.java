@@ -1062,5 +1062,27 @@ ResultSet rs1= prepared_statement.executeQuery();
         returnString+="]}";
         return returnString;
     }
+    
+      public static String transactionByUserItem(Connection connection, String item) throws SQLException {
+        PreparedStatement prepared_statement = connection.prepareStatement("SELECT DISTINCT transaction_id, type_of_ad,company,item_name, first_name, last_name, email FROM advertisement_data A,  sale_data S, user_data U  WHERE A.item_name=? and A.advertisement_id = S.ad_id and U.user_id=S.consumer_id");
+        prepared_statement.setString(1,item);
+        ResultSet rs1 = prepared_statement.executeQuery();
+       String returnString = "{\"transactions\":[ ";
+
+        while(rs1.next()) {
+             returnString += "{\"transaction_id\":" + rs1.getInt("transaction_id") + ","
+                + "\"company\":\"" + rs1.getString("company") + "\","
+                + "\"item_name\":\"" + rs1.getString("item_name") + "\","
+                + "\"first_name\":\"" + rs1.getString("first_name") + "\","
+                + "\"last_name\":\"" + rs1.getString("last_name") + "\","
+                 + "\"email\":\"" + rs1.getString("email") 
+                + "\"}";
+             returnString += ",";
+        }
+        returnString = returnString.substring(0,returnString.length()-1);
+        returnString+="]}";
+        return returnString;
+    }
+    
 
 }

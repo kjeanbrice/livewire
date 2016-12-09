@@ -22,6 +22,10 @@ $("#btn_get_names").click(function() {getNamesWhoBought()});
 
 $("#transaction_user_list").click(function() {$("#transaction_user_list_space").fadeIn("slow")});
 
+$("#transaction_item_list").click(function() {$("#transaction_item_list_space").fadeIn("slow")});
+$("#btn_get_transactions_by_item").click(function() {getTransactionsByItemName()});
+
+
 $("#btn_get_transactions_by_user").click(function() {getTransactionsByEmail()});
 
 $("#btn_getgroups").click(function() {getCustomerGroups($(" #user_group_space #user_email").val())});;
@@ -133,8 +137,8 @@ $("#create_transaction_space #account_number").val());
     }
     
     
-      function getTransactionsByItemName(email_val) {
-    var $url = "/ProjectSite/ProcessManagerTransactions?transaction=TRANSACTION_BY_EMAIL&email=" + $("#user_name_for_transaction").val();
+      function getTransactionsByItemName(item_name) {
+    var $url = "/ProjectSite/ProcessManagerTransactions?transaction=TRANSACTION_BY_ITEM&item_name=" + $("#item_name_for_transaction").val();
 
     $.ajax({
         method: 'get',
@@ -148,12 +152,12 @@ $("#create_transaction_space #account_number").val());
               var transactions = $.parseJSON( e.responseText);
               console.log(transactions);
               var listString = ""
-              $("#transaction_user_list_space h5").empty()
+              $("#transaction_item_list_space h5").empty()
             for (i in transactions.transactions) {
-              $("#transaction_user_list_space").append("<h4 > Transaction Number "+ transactions.transactions[i].transaction_id + " with " + transactions.transactions[i].first_name + " " + transactions.transactions[i].last_name +"<\/h4>")
-              $("#transaction_user_list_space").append("<h5> Bought:  " + transactions.transactions[i].item_name +"<\/h5>")
-              $("#transaction_user_list_space").append("<h5> From:  " + transactions.transactions[i].company +"<\/h5>")
-              $("#transaction_user_list_space").append("<h5> Their email is:  " + transactions.transactions[i].email +"<\/h5>")
+              $("#transaction_item_list_space").append("<h4 > Transaction Number "+ transactions.transactions[i].transaction_id + " with " + transactions.transactions[i].first_name + " " + transactions.transactions[i].last_name +"<\/h4>")
+              $("#transaction_item_list_space").append("<h5> Bought:  " + transactions.transactions[i].item_name +"<\/h5>")
+              $("#transaction_item_list_space").append("<h5> From:  " + transactions.transactions[i].company +"<\/h5>")
+              $("#transaction_item_list_space").append("<h5> Their email is:  " + transactions.transactions[i].email +"<\/h5>")
 
             }
 

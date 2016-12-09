@@ -95,7 +95,17 @@ System.out.println(transaction_type);
                 out.print(returnString);
                 out.flush();
                 GenUtils.closeConnection(request);
-            } else if (transaction_type.equals("CUSTOMER_GROUPS")) {
+            }
+            else if(transaction_type.equals("TRANSACTION_BY_ITEM")) {
+                String item_name = request.getParameter("item_name");
+                String returnString = DatabaseUtils.transactionByUserItem(connection, item_name);
+
+                response.setContentType("application/json");
+                out.print(returnString);
+                out.flush();
+                GenUtils.closeConnection(request);
+            }
+            else if (transaction_type.equals("CUSTOMER_GROUPS")) {
               ArrayList<String> items = DatabaseUtils.getCustomerGroups(connection,request.getParameter("email"));
                 String returnString = "{\"groups\":[ ";
                 for(int i = 0; i < items.size();i++) {
