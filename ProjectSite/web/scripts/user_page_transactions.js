@@ -23,9 +23,14 @@ var link = "http://" + window.location.hostname + ":" + window.location.port + "
 
 var useremail = $("#guser_email").text().trim();
 $("#history").click(function() {$("#history_space").fadeIn("slow"); getCustomerHistory(useremail);});
-$("#suggest").click(function() {$("#suggest_space").fadeIn("slow"); getCustomerSuggestions(useremail);});
+$("#suggest").click(function() {$("#suggest_space").fadeIn("slow"); getCustomerSuggestions(useremail);
+   
+});
+
 $("#user_groups").click(function() {$("#user_groups_space").fadeIn("slow"); getCustomerGroups(useremail);});
-$("#btn_log_out").click(function() {
+$("#all_groups").click(function() {$("#all_groups_space").fadeIn("slow"); getAllGroups();});
+
+    $("#btn_log_out").click(function() {
     var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "loginpage.jsp";
  window.location = link;
     
@@ -73,15 +78,20 @@ $("#btn_log_out").click(function() {
              $("#suggest_space").empty()
             var suggestions = $.parseJSON( e.responseText);
             for(m in suggestions.suggestions) {
-              $("#suggest_space").append("<h5>" + suggestions.suggestions[m] +"<\/h5>")
-
+                if(! $("#suggest_space").html().includes( suggestions.suggestions[m])) {
+              $("#suggest_space").append("<a>" + "Buy " +suggestions.suggestions[m]+ "!<\/a>");
+              
+                }
         }
+                        $("#suggest_space a").click(function() {buy($(this).text());}); 
+
         $("#suggest_space").fadeIn("slow");
 
         }
 
     });
     }
+    
     
         
     function getCustomerHistory(email) {
@@ -128,6 +138,7 @@ $("#btn_log_out").click(function() {
             console.log(groups);
             for(m in groups.groups) {
               $("#user_groups_space").append("<a id=\"group" + groups.groups[m].split('~')[1] +"\">" + groups.groups[m].split('~')[0] +"<\/a>")
+              $("#all_groups_space").append("</br></br>");
 
         }
         $("#user_group_space").fadeIn("slow");
@@ -148,3 +159,71 @@ var link = "http://" + window.location.hostname + ":" + window.location.port + "
 
     });
     }
+    
+        function getAllGroups() {
+  var senderId = parseInt($("#guser_id").text());
+    var $url = "/ProjectSite/ProcessCRLTransaction?transaction=CUSTOMER_GROUPS_ALL"
+
+
+    $.ajax({
+        method: 'get',
+        url: $url,
+        dataType: 'application/json',
+        success: function (response) {
+         
+        },
+        error: function (e) {
+             $("all_groups_space").empty()
+            var groups = $.parseJSON( e.responseText);
+            console.log(groups);
+            for(m in groups.groups) {
+              $("#all_groups_space").append("<a id=\"group" + groups.groups[m].split('~')[1] +"\">" + groups.groups[m].split('~')[0] +"<\/a>")
+              $("#all_groups_space").append("</br></br>");
+        }
+        $("#all_group_space").fadeIn("slow");
+        
+$("#all_groups_space a").click(function() {
+var groupIdForLink = this.id.split("group")[1];
+console.log(groupIdForLink);
+var link = "http://" + window.location.hostname + ":" + window.location.port + "/ProjectSite/" + "grouppage.jsp?groupID=" + groupIdForLink;
+ window.location = link;
+});
+
+        }
+        
+        
+        
+        
+        
+
+    });
+    }
+    
+    
+    function buy(text) {
+        var text = text.replace("sold by", ",").replace("Buy ", "").replace (" ", "").replace (" ", "").replace("!","").split(",")
+        var product = text[0];
+        var supplier = text[1];
+        var useremail = $("#guser_email").text().trim();
+
+        console.log(text);
+         var $url = "/ProjectSite/ProcessCRLTransaction?transaction=BUY"
+    +"&email=" + useremail
+    +"&supplier=" + supplier
+    +"&product=" + product;
+         $.ajax({
+        method: 'get',
+        url: $url,
+        dataType: 'application/json',
+        success: function (response) {
+         
+        },
+        error: function (e) {
+             alert("Bought!")
+
+        }
+
+        });
+
+    }
+    

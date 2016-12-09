@@ -1,3 +1,5 @@
+var register = true;
+var currentUserId = 0;
 $(document).ready(function () {
 
 
@@ -30,7 +32,12 @@ $("#account_alter").click(function() {$("#account_alter_space").fadeIn("slow");
 
 
 $("#register-submit").click(function() {
-     register() ;
+    if(register) {
+        register() ;
+    } else {
+        alert("updating");
+        updateUser();
+    }
 });
 
 $("#btn_make_transaction").click(function(){createTransaction($("#ad_id").val(), $("#seller_id").val(),$("#consumer_id").val(),$("#create_transaction_space #number_of_units").val(),
@@ -121,6 +128,7 @@ function getEmailList() {
             for(m in ads.ads) {
               $("#ads").append("<div id=\""+ads.ads[m].advertisement_id + "\"></div>")
               $("#"+ads.ads[m].advertisement_id).append("<h3>" + ads.ads[m].item_name +"<\/h3>")
+              $("#"+ads.ads[m].advertisement_id).append("<h4> AD ID is :" + ads.ads[m].advertisement_id +"<\/h4>")
               $("#"+ads.ads[m].advertisement_id).append("<h4>" + ads.ads[m].company +"<\/h4>")
               $("#"+ads.ads[m].advertisement_id).append("<p>" + ads.ads[m].content +"<\/p>")
               $("#"+ads.ads[m].advertisement_id).append("<a onclick=\"deleteAd("+ ads.ads[m].advertisement_id + ")\" href=\"javascript:void(0);\">Delete<\/a>")
@@ -188,8 +196,10 @@ function deleteUser(id) {
             url: $url,
             dataType: 'json',
             success: function (send_sucess) {
+                getAds();
             },
             error: function () {
+                getAds();
             }
 
         });
@@ -295,6 +305,9 @@ function deleteUser(id) {
               $("#user_history_space").append("<h5>" + suggestions.suggestions[m] +"<\/h5>")
               
         }
+        if (suggestions.suggestions.length ==0) {
+             $("#user_history_space").append("<h5>No History<\/h5>")
+        }
         $("#user_history_space").fadeIn("slow");
 
         }
@@ -319,7 +332,7 @@ function deleteUser(id) {
             var users = $.parseJSON( e.responseText);
             console.log(users);
             for(m in users.users) {
-               $("#account_alter_space").append("<h5 onclick=\"fillEditFormById("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">" + users.users[m].firstName + " " +users.users[m].lastName+ "<\/h5>")
+               $("#account_alter_space").append("<h3 onclick=\"fillEditFormById("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">" + users.users[m].firstName + " " +users.users[m].lastName+ "<\/h3>")
                $("#account_alter_space").append("<a onclick=\"deleteUser("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">Delete<\/a>")
         }$("#account_alter_space").append("</hr>");
         $("#account_alter_space").fadeIn("slow");
@@ -331,6 +344,7 @@ function deleteUser(id) {
     
         
         function fillEditFormById(user_id) {
+            currentUserId = user_id;
   var senderId = parseInt($("#guser_id").text());
     var $url = "/ProjectSite/ProcessCRLTransaction?transaction=GET_USERS"
 
@@ -348,6 +362,7 @@ function deleteUser(id) {
             for(m in users.users) {
                 if(parseInt(users.users[m].userID) == user_id) {
                     fillEditForm(users.users[m].firstName,users.users[m].lastName,users.users[m].userEmail, users.users[m].address);
+                    register = false;
                 }
             }
         }
@@ -408,20 +423,19 @@ function deleteUser(id) {
     
     
     
-     function updateUser(user_id) {
+     function updateUser() {
         var email = $("#remail").val();
         var address = $("#address").val();
         var password = $("#rpassword").val();
         var first_name = $("#first_name").val()
         var last_name = $("#last_name").val()
-        var $url = "/ProjectSite/ProcessCRLTransaction?transaction=UPDATE_USER"
+        var $url = "/ProjectSite/ProcessCRLTransaction?transaction=UPDATE_USER"+
         "&email=" + email + 
-          "&address=" +  address +
           "&password=" + password +
           "&first_name=" + first_name +
-        "&last_name=" + last_name
-        "&user_id=" + user_id;
-
+        "&last_name=" + last_name +
+        "&user_id=" + currentUserId+
+                          "&address=" +  encodeURIComponent(address) ;
          $.ajax({
             method: 'get',
             url: $url,

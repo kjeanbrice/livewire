@@ -83,7 +83,9 @@ System.out.println(transaction_type);
                 out.print(returnString);
                 out.flush();
                 GenUtils.closeConnection(request);
-            } else if(transaction_type.equals("ITEM_SUGGESTION")){
+            }
+            
+            else if(transaction_type.equals("ITEM_SUGGESTION")){
                 ArrayList<String> items = DatabaseUtils.getSuggestedItems(connection,request.getParameter("email"));
                 String returnString = "{\"suggestions\":[ ";
                 for(int i = 0; i < items.size();i++) {
@@ -123,7 +125,23 @@ System.out.println(transaction_type);
                 out.flush();
                 GenUtils.closeConnection(request);
 
-            } else if (transaction_type.equals("CUSTOMER_GROUPSWITH_ID")) {
+            } else if (transaction_type.equals("CUSTOMER_GROUPS_ALL")) {
+              ArrayList<String> items = DatabaseUtils.getAllGroups(connection);
+                String returnString = "{\"groups\":[ ";
+                for(int i = 0; i < items.size();i++) {
+                   returnString += "\"" + items.get(i) +  "\"";
+                   returnString += ",";
+                }
+                returnString = returnString.substring(0,returnString.length()-1);
+                returnString+="]}";
+                response.setContentType("application/json");
+                out.print(returnString);
+                out.flush();
+                GenUtils.closeConnection(request);
+
+            }
+            
+            else if (transaction_type.equals("CUSTOMER_GROUPSWITH_ID")) {
               ArrayList<String> items = DatabaseUtils.getCustomerGroupsWithId(connection,request.getParameter("email"));
                 String returnString = "{\"groups\":[ ";
                 for(int i = 0; i < items.size();i++) {
@@ -154,17 +172,16 @@ System.out.println(transaction_type);
                 GenUtils.closeConnection(request);
 
             } else if(transaction_type.equals("GENERATE_TRANSACTION")) {
-                                System.out.println(request.getParameter("number_of_units"));
 
             Calendar currenttime = Calendar.getInstance();
             Date sqldate = new Date((currenttime.getTime()).getTime());
                 DatabaseUtils.generateTransaction(connection  ,
                         Integer.parseInt(request.getParameter("ad_id")) ,
-                        Integer.parseInt(request.getParameter("seller_id")) ,
-                        Integer.parseInt(request.getParameter("consumer_id")) , 
+                        DatabaseUtils.findUserIdByEmail(connection, request.getParameter("seller_id")) ,
+                        DatabaseUtils.findUserIdByEmail(connection, request.getParameter("consumer_id")) , 
                         sqldate , 
                        Integer.parseInt(request.getParameter("number_of_units")) , 
-                       Integer.parseInt(request.getParameter("account_number")));
+                       DatabaseUtils.findUserAccountByEmail(connection, request.getParameter("consumer_id")));
             } else if(transaction_type.equals("GET_USERS")) {
 
                 ArrayList<UserData> users = DatabaseUtils.getAllUsers(connection);
@@ -184,17 +201,33 @@ System.out.println(transaction_type);
                int user_id = Integer.parseInt(request.getParameter("user_id"));
                DatabaseUtils.deleteUser(connection, user_id);
                 
-            } else if(transaction_type.equals("UPDATE_USER")) {
-                int user_id = Integer.parseInt(request.getParameter("user_id"));
+            }else if(transaction_type.equals("DELETE_ADVERTISEMENT")) {
+               int user_id = Integer.parseInt(request.getParameter("ad_id"));
+               DatabaseUtils.delete_advertisement(connection, user_id);
+                
+            } 
+            
+            else if(transaction_type.equals("UPDATE_USER")) {
+                        System.out.println("updating");
+System.out.println(request.getQueryString());
+                int update_user_id = Integer.parseInt(request.getParameter("user_id"));
                    String last_name = (String)request.getParameter("last_name");
-        String first_name = (String)request.getParameter("first_name");
+                  
+                   String first_name = (String)request.getParameter("first_name");
         String email = (String)request.getParameter("email");
         String password = (String)request.getParameter("password");
         String address = (String)request.getParameter("address");
-               DatabaseUtils.updateUser(connection, user_id, email, password, address, first_name, last_name);
+               DatabaseUtils.updateUser(connection, update_user_id, email, password, address, first_name, last_name);
                 
             }
-            
+             else if(transaction_type.equals("BUY")) {
+                String product = request.getParameter("product");
+                String supplier = request.getParameter("supplier");
+                String email = request.getParameter("email");
+                System.out.println(request.getQueryString());
+               DatabaseUtils.buyGivenProductAndSupplier(connection, product, supplier, email);
+                
+            }
            
             
                        
