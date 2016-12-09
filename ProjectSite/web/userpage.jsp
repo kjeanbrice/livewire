@@ -102,6 +102,13 @@
                                 Customer-Representative Panel
                             </a>
                         </form>
+
+   <form action ="#">
+                            <br>
+                            <a  class="btn btn-othergroup"   id="btn_manager_panel">
+                                Manager Panel
+                            </a>
+                        </form>
                          <form action ="#">
                             <br>
                             <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_log_out">

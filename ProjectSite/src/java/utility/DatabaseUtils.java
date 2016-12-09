@@ -351,8 +351,8 @@ public class DatabaseUtils {
                     String first_name = rs2.getString("first_name");
                     String address = rs2.getString("address");
                     String city = rs2.getString("city");
-                    String state = rs2.getString("state");
-                    int zip_code = rs2.getInt("zip_code");
+                    String state = rs2.getString("state"); 
+                   int zip_code = rs2.getInt("zip_code");
                     long telephone = rs2.getLong("telephone");
                     user_email = rs2.getString("email");
                     long account_number = rs2.getLong("account_number");
@@ -981,6 +981,106 @@ ResultSet rs1= prepared_statement.executeQuery();
         prepared_statement.setInt(4,1);
         prepared_statement.execute();
     }
- }
+    
+    
+    public static void register_employee(Connection connection ,String first_name , String last_name, String address, String email, String password) throws SQLException{ 
+        System.out.println("FROM DBUTILS" + last_name+first_name+email+password+address);
+        PreparedStatement prepared_statement =connection.prepareStatement("INSERT INTO user_data(last_name ,first_name,email, address,account_number) VALUES (?,?,?,?,?)");
+        prepared_statement.setString(1,last_name);
+        prepared_statement.setString(2,first_name);
+        prepared_statement.setString(3,email);
+        prepared_statement.setString(4,address);        
+        int rand1 = (int)(Math.random()* 99999999);
+        int rand2 = (int)(Math.random()* 99999999);
+        prepared_statement.setString(5, String.valueOf(rand1) +String.valueOf(rand2));
+        prepared_statement.execute();
+        
+        
+         prepared_statement =connection.prepareStatement("INSERT INTO login(user_email ,user_password,user_id,account_type) VALUES (?,?,?,?)");
+        prepared_statement.setString(1,email);
+        prepared_statement.setString(2,password);
+        prepared_statement.setInt(3,findUserIdByEmail(connection,email));
+        prepared_statement.setInt(4,2);
+        prepared_statement.execute();
+    }
+    
+    
+    public static void getCustomerPurchasedItem(Connection connection, String itemname) throws SQLException{ 
+        PreparedStatement prepared_statement= connection.prepareStatement("SELECT a.item_name , u. first_name , u.last_name FROM sale_data s, advertisement_data a, user_data u WHERE s. ad_id=a.advertisement_id AND s.consumer_id= u.user_id AND a.item_name=");
+        prepared_statement.setString(1,itemname);
+        prepared_statement.executeUpdate();
+    }
+    
+    public static ArrayList<String> getItemsByCompany(Connection connection, String company) throws SQLException {
+         PreparedStatement prepared_statement= connection.prepareStatement("SELECT item_name FROM advertisement_data WHERE company=?");
+         prepared_statement.setString(1,company);
+         ResultSet rs1 = prepared_statement.executeQuery();
+         ArrayList<String> items = new ArrayList<String>();
+         while(rs1.next()) {
+             items.add(rs1.getString("item_name"));
+         }
+         return items;
+    }
 
+    public static ArrayList<String> customersBoughtItem(Connection connection, String item) throws SQLException {
+                       System.out.println("user_name2s");
+        PreparedStatement prepared_statement= connection.prepareStatement("SELECT DISTINCT consumer_id FROM sale_data S, advertisement_data A WHERE S.ad_id=A.advertisement_id and item_name=?");
+         prepared_statement.setString(1,item);
 
+         ResultSet rs1 = prepared_statement.executeQuery();
+
+         ArrayList<String> user_names = new ArrayList<String>();
+         while(rs1.next()) {
+            prepared_statement= connection.prepareStatement("SELECT first_name,last_name FROM user_data WHERE user_id=?");
+            prepared_statement.setInt(1,rs1.getInt("consumer_id"));
+            ResultSet rs2 = prepared_statement.executeQuery();
+            rs2.first();
+            user_names.add(rs2.getString("first_name") + " " + rs2.getString("last_name"));
+         }
+         return user_names;
+    }
+    
+    public static String transactionByUsername(Connection connection, String email) throws SQLException {
+        PreparedStatement prepared_statement = connection.prepareStatement("SELECT DISTINCT transaction_id, type_of_ad,company,item_name, first_name, last_name, email FROM advertisement_data A,  sale_data S, user_data U  WHERE U.email=? and A.advertisement_id = S.ad_id and U.user_id=S.consumer_id");
+        prepared_statement.setString(1,email);
+        ResultSet rs1 = prepared_statement.executeQuery();
+       String returnString = "{\"transactions\":[ ";
+
+        while(rs1.next()) {
+             returnString += "{\"transaction_id\":" + rs1.getInt("transaction_id") + ","
+                + "\"company\":\"" + rs1.getString("company") + "\","
+                + "\"item_name\":\"" + rs1.getString("item_name") + "\","
+                + "\"first_name\":\"" + rs1.getString("first_name") + "\","
+                + "\"last_name\":\"" + rs1.getString("last_name") + "\","
+                 + "\"email\":\"" + rs1.getString("email") 
+                + "\"}";
+             returnString += ",";
+        }
+        returnString = returnString.substring(0,returnString.length()-1);
+        returnString+="]}";
+        return returnString;
+    }
+    
+      public static String transactionByUserItem(Connection connection, String item) throws SQLException {
+        PreparedStatement prepared_statement = connection.prepareStatement("SELECT DISTINCT transaction_id, type_of_ad,company,item_name, first_name, last_name, email FROM advertisement_data A,  sale_data S, user_data U  WHERE A.item_name=? and A.advertisement_id = S.ad_id and U.user_id=S.consumer_id");
+        prepared_statement.setString(1,item);
+        ResultSet rs1 = prepared_statement.executeQuery();
+       String returnString = "{\"transactions\":[ ";
+
+        while(rs1.next()) {
+             returnString += "{\"transaction_id\":" + rs1.getInt("transaction_id") + ","
+                + "\"company\":\"" + rs1.getString("company") + "\","
+                + "\"item_name\":\"" + rs1.getString("item_name") + "\","
+                + "\"first_name\":\"" + rs1.getString("first_name") + "\","
+                + "\"last_name\":\"" + rs1.getString("last_name") + "\","
+                 + "\"email\":\"" + rs1.getString("email") 
+                + "\"}";
+             returnString += ",";
+        }
+        returnString = returnString.substring(0,returnString.length()-1);
+        returnString+="]}";
+        return returnString;
+    }
+    
+
+}

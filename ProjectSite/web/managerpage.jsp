@@ -1,7 +1,6 @@
     <%-- 
-    Document   : grouppage
-    Created on : Nov 30, 2016, 4:14:54 PM
-    Author     : Karl
+    Document   : manager
+    Author     : Peter
 --%>
 
 <%@page import="general.UserData"%>
@@ -12,7 +11,7 @@
     
     <head>
     <head>
-        <title>Group Page</title>
+        <title>Manager Page</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles/gen-styles/group_postcomment_style.css">
@@ -85,37 +84,7 @@
 <!--                        <form action = "#"> 
                             <button type ="button" id ="btn_delete" data-toggle="modal" data-target="#delete_modal" class="btn btn-deletegroup">
                                 Delete Group
-                            </button>
-                        </form>-->
-                        
-                         <form action ="#">
-                             <br>
-                            <button  class="btn btn-othergroup" type="button" data-toggle="modal" data-target="#groupmembers_modal" id="btn_getemailList">
-                                Get Email List
-                            </button>
-                        </form>
-
-<!--                        <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#rename_modal" id = "btn_rename">
-                                Rename Group
-                            </a>
-                        </form>-->
-                         <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_leave">
-                                Log Out
-                            </a>
-                        </form>
-
-  <form action ="#">
-                            <br>
-                            <a  class="btn btn-othergroup"  data-toggle="modal" data-target="#leave_modal" id = "btn_refresh">
-                                Refresh
-                            </a>
-                        </form>
-                    </div>
-
+         
 
 
 
@@ -211,39 +180,7 @@
                             <div class="post-area">
                                 <div class="wrapper">
                                     <div class="middle_box">
-                                        <h3 id="create_ad" style="cursor:pointer">Create An Advertisement</h3>
-                                        <div class="feed_form" id="ad_creation" style="display:none">
-                                            <form action="" id="frmpost" method="post">   
-                                                    <div class="row_ele">
-                                                      <div class="form-group">
-                                                <input type="text" name="type" id="type" tabindex="1" class="form-control" placeholder="Type" value="${requestScope.invaliduser.email}">
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text" name="company" id="company" tabindex="2" class="form-control" placeholder="Company">
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text" name="item" id="item" tabindex="2" class="form-control" placeholder="Item Name">
-                                            </div>
-                                              <div class="form-group">
-                                                <input type="text" name="price" id="price" tabindex="2" class="form-control" placeholder="Unit Price">
-                                            </div>
-                                            
-                                             <div class="form-group">
-                                                <input type="text" name="num_available" id="num_available" tabindex="2" class="form-control" placeholder="Number Available">
-                                            </div>
-                                                    </div>  
-                                                <div class="row_ele">
-                                                    <div class="form-group">
-                                                    <textarea name="message" id="content" class="form-control" style="resize: none;" rows="3" placeholder="Message..."></textarea>
-                                                    </div>
-                                                    </div>  
-                                                <div class="row_ele">
-                                                    <input class="btn btn-primary" id="btn_create_ad" type="button" name="create" value="Create"/>
-                                                    <span  class = "lbl-error" id="err_post"></span>
-                                                </div>
-                                            </form>
-                                        </div>
-                                            
+                                                                                   
                                             <h3 id="list_ads" style="cursor:pointer">List Current Advertisements</h3>
                                         <div class="feed_form" id="list_ads_space" style="display:none">
                               
@@ -277,43 +214,74 @@
                                             </form>
                                         </div>
                                             
-                                            
-                                            
-                                                   
-                                        <h3 id="user_groups" style="cursor:pointer">Get Users Groups</h3>
-                                        <div class="feed_form" id="user_group_space" style="display:none">
+                                        <h3 id="company_list" style="cursor:pointer">List of Items Sold By Company</h3>
+                                        <div class="feed_form" id="company_list_space" style="display:none">
                                             <form action="" id="frmpost" method="post">   
                                                     <div class="row_ele">
                                                       <div class="form-group">
-                                                <input type="text" name="type" id="user_email" tabindex="1" class="form-control" placeholder="User Email" >
+                                                <input type="text" name="type" id="item_company_name" tabindex="1" class="form-control" placeholder="Company Name" >
                                                       </div>
                                                 <div class="row_ele">
-                                                    <input class="btn btn-primary" id="btn_getgroups" type="button" name="get_groups" value="Get Groups"/>
+                                                    <input class="btn btn-primary" id="btn_get_items" type="button" name="get_items" value="Get Items"/>
                                                     <span  class = "lbl-error" id="err_post"></span>
                                                 </div>
                                                         <div id="suggestions"></div>
                                             </form>
                                         </div
                                     </div>                                    </div>
-
                                             
                                             
-                                             <h3 id="user_history" style="cursor:pointer">Get Account History</h3>
-                                        <div class="feed_form" id="user_history_space" style="display:none">
+                                     <h3 id="people_item_list" style="cursor:pointer">List of People Who Bought Item</h3>
+                                        <div class="feed_form" id="people_item_list_space" style="display:none">
                                             <form action="" id="frmpost" method="post">   
                                                     <div class="row_ele">
                                                       <div class="form-group">
-                                                <input type="text" name="type" id="user_email" tabindex="1" class="form-control" placeholder="User Email" >
+                                                <input type="text" name="type" id="item_name" tabindex="1" class="form-control" placeholder="Item Name" >
                                                       </div>
                                                 <div class="row_ele">
-                                                    <input class="btn btn-primary" id="btn_gethistory" type="button" name="get_suggestions" value="Get User History"/>
+                                                    <input class="btn btn-primary" id="btn_get_names" type="button" name="get_names" value="Get Names"/>
                                                     <span  class = "lbl-error" id="err_post"></span>
                                                 </div>
-                                                        <div id="history"></div>
+                                                        <div id="suggestions"></div>
                                             </form>
                                         </div
                                     </div>                                    </div>
-                                            
+                                
+                                
+                                
+                                <h3 id="transaction_user_list" style="cursor:pointer">List Transactions By User</h3>
+                                        <div class="feed_form" id="transaction_user_list_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+                                                      <div class="form-group">
+                                                <input type="text" name="type" id="user_name_for_transaction" tabindex="1" class="form-control" placeholder="User Email" >
+                                                      </div>
+                                                <div class="row_ele">
+                                                    <input class="btn btn-primary" id="btn_get_transactions_by_user" type="button" name="get_transactions_by_user" value="Get Transactions"/>
+                                                    <span  class = "lbl-error" id="err_post"></span>
+                                                </div>
+                                                        <div id="suggestions"></div>
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
+                            
+                            
+                            
+                                   <h3 id="transaction_item_list" style="cursor:pointer">List Transactions By Item Name</h3>
+                                        <div class="feed_form" id="transaction_item_list_space" style="display:none">
+                                            <form action="" id="frmpost" method="post">   
+                                                    <div class="row_ele">
+                                                      <div class="form-group">
+                                                <input type="text" name="type" id="item_name_for_transaction" tabindex="1" class="form-control" placeholder="User Email" >
+                                                      </div>
+                                                <div class="row_ele">
+                                                    <input class="btn btn-primary" id="btn_get_transactions_by_item" type="button" name="get_transactions_by_user" value="Get Transactions"/>
+                                                    <span  class = "lbl-error" id="err_post"></span>
+                                                </div>
+                                                        <div id="suggestions"></div>
+                                            </form>
+                                        </div
+                                    </div>                                    </div>
                                             
                                          <h3 id="account_alter" style="cursor:pointer">Add/Edit/Delete Account</h3>
                                          
@@ -360,32 +328,6 @@
                                     </div>                                    </div>
                                             
                                             
-                                            
-                                    <h3 id="bestsellers" style="cursor:pointer">Best Seller Items</h3>
-                                        <div class="feed_form" id="best_seller_space" style="display:none">
-                                            <form action="" id="frmpost" method="post">   
-                                                    <div class="row_ele">
-
-                                                        <div id="sellers"></div>
-                                            </form>
-                                        </div
-                                    </div>                                    </div>
-                                            
-                                            
-                                               <h3 id="item_suggestions" style="cursor:pointer">Get Item Suggestions</h3>
-                                        <div class="feed_form" id="suggest_space" style="display:none">
-                                            <form action="" id="frmpost" method="post">   
-                                                    <div class="row_ele">
-                                                      <div class="form-group">
-                                                <input type="text" name="type" id="user_email" tabindex="1" class="form-control" placeholder="User Email" >
-                                                      </div>
-                                                <div class="row_ele">
-                                                    <input class="btn btn-primary" id="btn_getsuggestions" type="button" name="get_suggestions" value="Get Suggestions"/>
-                                                    <span  class = "lbl-error" id="err_post"></span>
-                                                </div>
-                                                        <div id="suggestions"></div>
-                                            </form>
-                                        </div>
                                         <div class="clear"></div>
                                         <div class="feed_div" id="feed_div">
                                         <div id ="post_area_template">
@@ -404,7 +346,7 @@
     </div>
 
 <script src = "scripts/jquery-3.1.1.min.js"></script>
-<script src = "scripts/CRL_transactions.js"></script>
+<script src = "scripts/manager_transaction.js"></script>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
 </body>
 
