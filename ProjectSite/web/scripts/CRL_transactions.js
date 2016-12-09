@@ -196,8 +196,10 @@ function deleteUser(id) {
             url: $url,
             dataType: 'json',
             success: function (send_sucess) {
+                getAds();
             },
             error: function () {
+                getAds();
             }
 
         });
@@ -303,6 +305,9 @@ function deleteUser(id) {
               $("#user_history_space").append("<h5>" + suggestions.suggestions[m] +"<\/h5>")
               
         }
+        if (suggestions.suggestions.length ==0) {
+             $("#user_history_space").append("<h5>No History<\/h5>")
+        }
         $("#user_history_space").fadeIn("slow");
 
         }
@@ -327,7 +332,7 @@ function deleteUser(id) {
             var users = $.parseJSON( e.responseText);
             console.log(users);
             for(m in users.users) {
-               $("#account_alter_space").append("<h5 onclick=\"fillEditFormById("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">" + users.users[m].firstName + " " +users.users[m].lastName+ "<\/h5>")
+               $("#account_alter_space").append("<h3 onclick=\"fillEditFormById("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">" + users.users[m].firstName + " " +users.users[m].lastName+ "<\/h3>")
                $("#account_alter_space").append("<a onclick=\"deleteUser("+ users.users[m].userID + ")\" href=\"javascript:void(0);\">Delete<\/a>")
         }$("#account_alter_space").append("</hr>");
         $("#account_alter_space").fadeIn("slow");

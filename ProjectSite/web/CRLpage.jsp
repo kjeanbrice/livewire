@@ -318,6 +318,7 @@
                                          <h3 id="account_alter" style="cursor:pointer">Add/Edit/Delete Account</h3>
                                          
                                          <form id="alter-form" action=" " method="post" role="form" style="display: none;">
+                                             <h4>Click on a name to view and edit info about the account</h4>
                                             <div class="form-group">
                                                 <input type="text" name="remail" id="remail" tabindex="1" class="form-control" placeholder="Email Address" value="">
                                             </div>

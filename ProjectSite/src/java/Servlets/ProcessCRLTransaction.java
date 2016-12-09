@@ -183,7 +183,13 @@ System.out.println(transaction_type);
                int user_id = Integer.parseInt(request.getParameter("user_id"));
                DatabaseUtils.deleteUser(connection, user_id);
                 
-            } else if(transaction_type.equals("UPDATE_USER")) {
+            }else if(transaction_type.equals("DELETE_ADVERTISEMENT")) {
+               int user_id = Integer.parseInt(request.getParameter("ad_id"));
+               DatabaseUtils.delete_advertisement(connection, user_id);
+                
+            } 
+            
+            else if(transaction_type.equals("UPDATE_USER")) {
                         System.out.println("updating");
 System.out.println(request.getQueryString());
                 int update_user_id = Integer.parseInt(request.getParameter("user_id"));
