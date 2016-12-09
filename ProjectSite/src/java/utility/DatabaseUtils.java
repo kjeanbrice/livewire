@@ -770,6 +770,17 @@ public static ArrayList<String> getCustomerGroupsWithId( Connection connection ,
     return groupNames;
 }
 
+public static ArrayList<String> getAllGroups( Connection connection  ) throws SQLException{
+    PreparedStatement prepared_statement = connection. prepareStatement("SELECT * FROM group_data");
+    ResultSet rs1 =  prepared_statement.executeQuery();
+    ArrayList<String> groupNames = new ArrayList<String>();
+    while(rs1.next()) {
+        groupNames.add(rs1.getString("group_name") + "~" + rs1.getInt("group_id"));
+    }
+    return groupNames;
+}
+
+
     public static int editComment(Connection connection,
             int comment_id, String content)
             throws SQLException {

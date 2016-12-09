@@ -123,7 +123,23 @@ System.out.println(transaction_type);
                 out.flush();
                 GenUtils.closeConnection(request);
 
-            } else if (transaction_type.equals("CUSTOMER_GROUPSWITH_ID")) {
+            } else if (transaction_type.equals("CUSTOMER_GROUPS_ALL")) {
+              ArrayList<String> items = DatabaseUtils.getAllGroups(connection);
+                String returnString = "{\"groups\":[ ";
+                for(int i = 0; i < items.size();i++) {
+                   returnString += "\"" + items.get(i) +  "\"";
+                   returnString += ",";
+                }
+                returnString = returnString.substring(0,returnString.length()-1);
+                returnString+="]}";
+                response.setContentType("application/json");
+                out.print(returnString);
+                out.flush();
+                GenUtils.closeConnection(request);
+
+            }
+            
+            else if (transaction_type.equals("CUSTOMER_GROUPSWITH_ID")) {
               ArrayList<String> items = DatabaseUtils.getCustomerGroupsWithId(connection,request.getParameter("email"));
                 String returnString = "{\"groups\":[ ";
                 for(int i = 0; i < items.size();i++) {
